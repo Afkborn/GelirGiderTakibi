@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/ozet">
+
+    <fragment
+        android:id="@+id/harcamaEkle"
+        android:name="com.bilgehankalay.gelirgidertakibi.fragment.HarcamaEkle"
+        android:label="fragment_harcama_ekle"
+        tools:layout="@layout/fragment_harcama_ekle" />
+    <fragment
+        android:id="@+id/ozet"
+        android:name="com.bilgehankalay.gelirgidertakibi.fragment.Ozet"
+        android:label="fragment_ozet"
+        tools:layout="@layout/fragment_ozet" />
+    <fragment
+        android:id="@+id/gelirEkle"
+        android:name="com.bilgehankalay.gelirgidertakibi.fragment.GelirEkle"
+        android:label="fragment_gelir_ekle"
+        tools:layout="@layout/fragment_gelir_ekle" />
+    <fragment
+        android:id="@+id/rapor"
+        android:name="com.bilgehankalay.gelirgidertakibi.fragment.Rapor"
+        android:label="fragment_rapor"
+        tools:layout="@layout/fragment_rapor" />
+</navigation>
