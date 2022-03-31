@@ -5,32 +5,38 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.Serializable
 
-@Entity(tableName = "harcamalar") // tablo adı
-data class Harcama(
+@Entity(tableName = "gelir_gider") // tablo adı
+data class GelirGider(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     var id : Int = 0,
 
+    @ColumnInfo(name = "tip")
+    var tip : Int, // 0 => Gelir, 1 => Gider
     @ColumnInfo(name = "ad")
-    var ad : String,
+
+    var ad : String? = null,
 
     @ColumnInfo(name = "miktar")
     var miktar : Double,
 
     @ColumnInfo(name = "aciklama")
-    var aciklama : String?,
+    var aciklama : String? = null,
 
     @ColumnInfo(name="eklenme_zamani")
     var eklenme_zamani : Long,
 
     @ColumnInfo(name="harcama_tipi")
-    var harcama_tipi_id : Int,
+    var harcama_tipi_id : Int? = null,
 
     @ColumnInfo(name = "duzenli_mi")
-    var duzenli_mi : Boolean?,
+    var duzenli_mi : Boolean? = null,
 
     @ColumnInfo(name = "tekrar_suresi")
-    var tekrar_suresi : Int?,
+    var tekrar_suresi : Int? = null,
 
 
-) : Serializable
+) : Serializable {
+
+
+}
