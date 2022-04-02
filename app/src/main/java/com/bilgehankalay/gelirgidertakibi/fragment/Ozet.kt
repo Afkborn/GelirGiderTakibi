@@ -12,23 +12,33 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bilgehankalay.gelirgidertakibi.Database.GelirGiderTakipDatabase
+import com.bilgehankalay.gelirgidertakibi.Dialog.SearchDialogFragment
 import com.bilgehankalay.gelirgidertakibi.Model.GelirGider
+import com.bilgehankalay.gelirgidertakibi.Model.HarcamaTipi
 import com.bilgehankalay.gelirgidertakibi.R
 import com.bilgehankalay.gelirgidertakibi.adapter.GelirGiderRW
 import com.bilgehankalay.gelirgidertakibi.databinding.FragmentOzetBinding
 import java.text.NumberFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
-class Ozet : Fragment() {
+class Ozet : Fragment(), SearchDialogFragment.SeciliItemListener {
     private lateinit var binding : FragmentOzetBinding
 
     var gelirGiderList  : ArrayList<GelirGider> = arrayListOf()
+    var filtreliGelirGiderList  : ArrayList<GelirGider> = arrayListOf()
+
     var toplamGelir = 0.0
     var toplamGider = 0.0
 
     private lateinit var gelirGiderTakipDatabase : GelirGiderTakipDatabase
     private lateinit var gelirGiderRWAdapter : GelirGiderRW
+
+    var harcamaTipiAdListesi : ArrayList<String> = arrayListOf()
+    var harcamaTipleri : ArrayList<HarcamaTipi> = arrayListOf()
+
+    var filtreVarMi : Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,15 +58,10 @@ class Ozet : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bilgilerTemizle()
-        /*
-        gelirGiderList.add(GelirGider(tip =  0, ad = "Maaş", miktar = 6648.89, eklenme_zamani = 1647291660))
-        gelirGiderList.add(GelirGider(tip = 1, ad = "Market", miktar = 118.58, eklenme_zamani = 1647896660, harcama_tipi_id = 1))
-        gelirGiderList.add(GelirGider(tip = 1, ad = "Kredi", miktar = 1158.00, eklenme_zamani = 1647550999, harcama_tipi_id = 6))
-        gelirGiderList.add(GelirGider(tip = 1, ad = "Yol", miktar = 350.00, eklenme_zamani = 1647550999, harcama_tipi_id = 4))
-        gelirGiderList.add(GelirGider(tip = 1, ad = "Kıyafet", miktar = 1000.00, eklenme_zamani = 1647550999, harcama_tipi_id = 3))
-        gelirGiderList.add(GelirGider(tip = 1, ad = "Ziynet", miktar = 1450.00, eklenme_zamani = 1647550999, harcama_tipi_id = 5))
-        gelirGiderList.add(GelirGider(tip = 1, ad = "Yemek", miktar = 550.00, eklenme_zamani = 1647550999, harcama_tipi_id = 2))
-        */
+
+
+
+        // 30 - 150
         yukleGelirGiderList()
 
 
@@ -72,6 +77,20 @@ class Ozet : Fragment() {
         binding.recyclerViewGelirGider.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
         binding.recyclerViewGelirGider.adapter = gelirGiderRWAdapter
         binding.recyclerViewGelirGider.setHasFixedSize(true)
+
+        harcamaTipleriGetir()
+        binding.buttonFiltre.setOnClickListener {
+            if (!filtreVarMi){
+                SearchDialogFragment(harcamaTipiAdListesi,this).show(childFragmentManager,"ara")
+            }
+            else{
+                gelirGiderRWAdapter.gelirGiderListGuncelle(gelirGiderList)
+                filtreVarMi = !filtreVarMi
+                binding.buttonFiltre.setText(requireContext().getString(R.string.filtrele))
+            }
+
+
+        }
     }
 
 
@@ -92,6 +111,9 @@ class Ozet : Fragment() {
         toplamGider = 0.0
         toplamGelir = 0.0
         gelirGiderList.clear()
+        harcamaTipiAdListesi.clear()
+        harcamaTipleri.clear()
+        filtreliGelirGiderList.clear()
     }
 
     private fun secilenGelirGiderClick(gelenGelirGider: GelirGider){
@@ -162,5 +184,59 @@ class Ozet : Fragment() {
         dialog.show()
     }
 
+    private fun harcamaTipleriGetir(){
+        gelirGiderTakipDatabase.harcamaTipiDAO().tumHarcamaTipi().forEach {
+            if (it != null){
+                harcamaTipleri.add(it)
+                harcamaTipiAdListesi.add(it.ad)
+
+            }
+        }
+    }
+
+    override fun seciliItem(seciliItem: ArrayList<String>) {
+        filtreliGelirGiderList.clear()
+
+        filtreVarMi = seciliItem.size > 0
+        if (filtreVarMi){
+            binding.buttonFiltre.setText(requireContext().getString(R.string.filtre_kaldır))
+        }
+        val filtrelenecekHarcamaTipleri : ArrayList<HarcamaTipi> = arrayListOf()
+        seciliItem.forEach {
+            if (it == requireContext().getString(R.string.duzenli_islem)){
+                //TODO düzenli işlemleri listele
+                 gelirGiderTakipDatabase.gelirGiderDAO().duzenliGelirGider().forEach{ gelirGider ->
+                     if (gelirGider != null)
+                        filtreliGelirGiderList.add(gelirGider)
+                 }
+            }
+            else if (it == requireContext().getString(R.string.gelirlerim)){
+                gelirGiderTakipDatabase.gelirGiderDAO().gelirlerim().forEach { gelirim ->
+                    if (gelirim != null)
+                        filtreliGelirGiderList.add(gelirim)
+                }
+            }
+            else if (it == requireContext().getString(R.string.giderlerim)){
+                gelirGiderTakipDatabase.gelirGiderDAO().giderlerim().forEach { giderim ->
+                    if (giderim !=null)
+                        filtreliGelirGiderList.add(giderim)
+                }
+            }
+            else{
+                val databaseReturnHarcamaTipi = gelirGiderTakipDatabase.harcamaTipiDAO().harcamaTipiGetirAd(it)
+                if (databaseReturnHarcamaTipi != null){
+                    filtrelenecekHarcamaTipleri.add(databaseReturnHarcamaTipi)
+                }
+            }
+        }
+
+        filtrelenecekHarcamaTipleri.forEach {
+            gelirGiderTakipDatabase.gelirGiderDAO().harcamaTipiGelirGider(it.id).forEach { gelirGider ->
+                if (gelirGider != null)
+                    filtreliGelirGiderList.add(gelirGider)
+            }
+        }
+        gelirGiderRWAdapter.gelirGiderListGuncelle(filtreliGelirGiderList)
+    }
 
 }

@@ -61,8 +61,8 @@ class GelirGiderRW(private var gelirGiderList : ArrayList<GelirGider>)  : Recycl
             } //GELİR
             else{
                 //GİDER
-                it.imageViewGelirGiderIco.visibility = View.VISIBLE
-                it.imageViewGelirGiderIco.setImageResource(R.drawable.up_arrow)
+                it.imageViewGelirGiderIco.visibility = View.INVISIBLE
+                //it.imageViewGelirGiderIco.setImageResource(R.drawable.up_arrow)
                 it.textViewHarcamaTipiAdi.visibility = View.VISIBLE
                 it.textViewHarcamaMiktar.text = rw_parent!!.context.getString(R.string.eksi_bakiye,formatlananMiktar)
                 it.progressBarHarcamaYuzde.max = toplamGider.toInt()

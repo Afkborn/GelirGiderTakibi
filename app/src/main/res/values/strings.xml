@@ -38,7 +38,13 @@
     <string name="isimsiz_gelir">İsimsiz Gelir</string>
     <string name="evet">Evet</string>
     <string name="hayir">Hayır</string>
-
+    <string name="duzenli_islem_goster">Düzenli İşlemleri Göster</string>
+    <string name="tamam">Tamam</string>
     <string name="sil_tite">Silme İşlemi</string>
     <string name="sil_message">%1$s\'ı silmek istediğinden emin misin?</string>
+    <string name="ara">ara</string>
+    <string name="iptal">İptal</string>
+    <string name="filtrele">Filtrele</string>
+    <string name="filtre_kaldır">Filtre Kaldır</string>
+
 </resources>
