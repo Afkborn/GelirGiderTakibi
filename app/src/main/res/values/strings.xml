@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">Gelir Gider Takibi</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <string name="harcama_ozet">Harcama Özet</string>
     <string name="harcama_ekle">Harcama Ekle</string>
     <string name="ozet">Özet</string>
@@ -10,4 +9,36 @@
     <string name="giderlerim">Giderlerim</string>
     <string name="gelirlerim">Gelirlerim</string>
     <string name="net">Net</string>
+    <string name="eksi_bakiye">\u002D %1$s</string>
+    <string name="arti_bakiye">\u002B %1$s</string>
+    <string name="harcama_yuzde">%%%1$s</string>
+    <string name="market">Market</string>
+    <string name="yemek">Yemek</string>
+    <string name="kiyafet">Kıyafet</string>
+    <string name="yol">Yol</string>
+    <string name="ziynet">Ziynet</string>
+    <string name="kredi">Kredi</string>
+    <string name="borsa">Borsa</string>
+    <string name="espor">E-spor</string>
+    <string name="okul">Okul</string>
+    <string name="cocuk">Çocuk Bakım</string>
+    <string name="seyahat">Seyahat</string>
+    <string name="gelir_tipi">Gelir Tipi</string>
+    <string name="aktif_gelir">Aktif Gelir</string>
+    <string name="pasif_gelir">Pasif Gelir</string>
+    <string name="ad">Ad</string>
+    <string name="miktar">Miktar</string>
+    <string name="temizle">Temizle</string>
+    <string name="ekle">Ekle</string>
+    <string name="duzenli_islem">Düzenli işlem</string>
+    <string name="aciklama">Açıklama</string>
+    <string name="kategori">Kategori</string>
+    <string name="isimsiz">İsimsiz</string>
+    <string name="isimsiz_harcama">İsimsiz Harcama</string>
+    <string name="isimsiz_gelir">İsimsiz Gelir</string>
+    <string name="evet">Evet</string>
+    <string name="hayir">Hayır</string>
+
+    <string name="sil_tite">Silme İşlemi</string>
+    <string name="sil_message">%1$s\'ı silmek istediğinden emin misin?</string>
 </resources>

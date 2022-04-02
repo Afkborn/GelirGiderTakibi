@@ -9,7 +9,7 @@ import com.bilgehankalay.gelirgidertakibi.DAO.HarcamaTipiDAO
 import com.bilgehankalay.gelirgidertakibi.Model.GelirGider
 import com.bilgehankalay.gelirgidertakibi.Model.HarcamaTipi
 
-@Database(entities = [GelirGider::class,HarcamaTipi::class], version = 1)
+@Database(entities = [GelirGider::class,HarcamaTipi::class], version = 4)
 abstract class GelirGiderTakipDatabase : RoomDatabase() {
     abstract fun gelirGiderDAO() : GelirGiderDAO
     abstract fun harcamaTipiDAO() : HarcamaTipiDAO
@@ -22,7 +22,7 @@ abstract class GelirGiderTakipDatabase : RoomDatabase() {
                     context,
                     GelirGiderTakipDatabase::class.java,
                     "gelirgidertakip.db"
-                ).allowMainThreadQueries().build()
+                ).allowMainThreadQueries().fallbackToDestructiveMigration().build()
             }
             return INSTANCE
         }

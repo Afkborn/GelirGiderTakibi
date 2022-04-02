@@ -13,8 +13,8 @@ data class GelirGider(
 
     @ColumnInfo(name = "tip")
     var tip : Int, // 0 => Gelir, 1 => Gider
-    @ColumnInfo(name = "ad")
 
+    @ColumnInfo(name = "ad")
     var ad : String? = null,
 
     @ColumnInfo(name = "miktar")
@@ -34,6 +34,11 @@ data class GelirGider(
 
     @ColumnInfo(name = "tekrar_suresi")
     var tekrar_suresi : Int? = null,
+
+    @ColumnInfo(name = "aktif_pasif")
+    var aktif_pasif : Boolean? = null, // True => Aktif, False = Pasif
+
+
 
 
 ) : Serializable {

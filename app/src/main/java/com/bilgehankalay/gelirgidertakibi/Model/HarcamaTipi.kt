@@ -1,5 +1,6 @@
 package com.bilgehankalay.gelirgidertakibi.Model
 
+import android.net.Uri
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -14,7 +15,7 @@ data class HarcamaTipi(
     @ColumnInfo(name="ad")
     var ad : String,
 
-    @ColumnInfo(name = "icon_id")
-    var icon_id : Int
+    @ColumnInfo(name = "drawable_name")
+    var drawable_name : String
 
 ) : Serializable

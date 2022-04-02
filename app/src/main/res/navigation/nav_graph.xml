@@ -8,8 +8,12 @@
     <fragment
         android:id="@+id/harcamaEkle"
         android:name="com.bilgehankalay.gelirgidertakibi.fragment.HarcamaEkle"
-        android:label="fragment_harcama_ekle"
-        tools:layout="@layout/fragment_harcama_ekle" />
+        android:label="harcamaEkle_to_Ozet"
+        tools:layout="@layout/fragment_harcama_ekle">
+        <action
+            android:id="@+id/action_harcamaEkle_to_ozet"
+            app:destination="@id/ozet" />
+    </fragment>
     <fragment
         android:id="@+id/ozet"
         android:name="com.bilgehankalay.gelirgidertakibi.fragment.Ozet"
@@ -18,8 +22,12 @@
     <fragment
         android:id="@+id/gelirEkle"
         android:name="com.bilgehankalay.gelirgidertakibi.fragment.GelirEkle"
-        android:label="fragment_gelir_ekle"
-        tools:layout="@layout/fragment_gelir_ekle" />
+        android:label="gelirEkle_to_Ozet"
+        tools:layout="@layout/fragment_gelir_ekle">
+        <action
+            android:id="@+id/action_gelirEkle_to_ozet"
+            app:destination="@id/ozet" />
+    </fragment>
     <fragment
         android:id="@+id/rapor"
         android:name="com.bilgehankalay.gelirgidertakibi.fragment.Rapor"

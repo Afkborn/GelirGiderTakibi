@@ -14,7 +14,7 @@ interface GelirGiderDAO {
     @Delete
     fun gelirGiderSil(gelirGider: GelirGider)
 
-    @Query("SELECT * FROM gelir_gider")
+    @Query("SELECT * FROM gelir_gider ORDER BY eklenme_zamani DESC")
     fun tumGelirGider() : List<GelirGider?>
 
 
