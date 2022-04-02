@@ -58,19 +58,12 @@ class Ozet : Fragment(), SearchDialogFragment.SeciliItemListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bilgilerTemizle()
-
-
-
-        // 30 - 150
         yukleGelirGiderList()
-
+        harcamaTipleriGetir()
 
         gelirGiderRWAdapter  = GelirGiderRW(gelirGiderList)
         recyclerViewSetSwap()
-
         gelirGiderRWAdapter!!.onItemClick = ::secilenGelirGiderClick // High Order Function
-
-
 
         ozetBilgisiYaz()
 
@@ -78,7 +71,7 @@ class Ozet : Fragment(), SearchDialogFragment.SeciliItemListener {
         binding.recyclerViewGelirGider.adapter = gelirGiderRWAdapter
         binding.recyclerViewGelirGider.setHasFixedSize(true)
 
-        harcamaTipleriGetir()
+
         binding.buttonFiltre.setOnClickListener {
             if (!filtreVarMi){
                 SearchDialogFragment(harcamaTipiAdListesi,this).show(childFragmentManager,"ara")
@@ -95,6 +88,7 @@ class Ozet : Fragment(), SearchDialogFragment.SeciliItemListener {
 
 
     private fun ozetBilgisiYaz(){
+
         val (pairToplamGelir, pairtoplamGider) = gelirGiderRWAdapter.toplamGelirGiderHesapla()
         toplamGelir = pairToplamGelir
         toplamGider = pairtoplamGider
@@ -140,9 +134,14 @@ class Ozet : Fragment(), SearchDialogFragment.SeciliItemListener {
             }
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 //kaydırıldığında çalışır
-                val kaydirilanGelirGider = gelirGiderList[viewHolder.adapterPosition]
-                gelirGiderSilWithDialog(kaydirilanGelirGider)
-
+                if (filtreVarMi){
+                    val kaydirilanGelirGider = filtreliGelirGiderList[viewHolder.adapterPosition]
+                    gelirGiderSilWithDialog(kaydirilanGelirGider)
+                }
+                else{
+                    val kaydirilanGelirGider = gelirGiderList[viewHolder.adapterPosition]
+                    gelirGiderSilWithDialog(kaydirilanGelirGider)
+                }
             }
 
         }
@@ -170,6 +169,15 @@ class Ozet : Fragment(), SearchDialogFragment.SeciliItemListener {
                 DialogInterface.BUTTON_POSITIVE -> {
                     gelirGiderSil(silinecekGelirGider)
                     gelirGiderRWAdapter.notifyDataSetChanged()
+
+                    bilgilerTemizle()
+                    yukleGelirGiderList()
+                    harcamaTipleriGetir()
+
+                    gelirGiderRWAdapter.gelirGiderListGuncelle(gelirGiderList)
+                    ozetBilgisiYaz()
+                    filtreVarMi = !filtreVarMi
+                    binding.buttonFiltre.setText(requireContext().getString(R.string.filtrele))
                 }
                 DialogInterface.BUTTON_NEGATIVE -> {
                     gelirGiderRWAdapter.notifyDataSetChanged()
