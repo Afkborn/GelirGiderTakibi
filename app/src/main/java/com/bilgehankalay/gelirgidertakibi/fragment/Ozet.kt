@@ -7,7 +7,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,6 +30,7 @@ class Ozet : Fragment(), SearchDialogFragment.SeciliItemListener {
 
     var gelirGiderList  : ArrayList<GelirGider> = arrayListOf()
     var filtreliGelirGiderList  : ArrayList<GelirGider> = arrayListOf()
+    var searchGelirGiderList : ArrayList<GelirGider> = arrayListOf()
 
     var toplamGelir = 0.0
     var toplamGider = 0.0
@@ -60,18 +63,20 @@ class Ozet : Fragment(), SearchDialogFragment.SeciliItemListener {
         bilgilerTemizle()
         yukleGelirGiderList()
         harcamaTipleriGetir()
+        recyclerViewSetSwap()
+
 
         gelirGiderRWAdapter  = GelirGiderRW(gelirGiderList)
-        recyclerViewSetSwap()
         gelirGiderRWAdapter!!.onItemClick = ::secilenGelirGiderClick // High Order Function
-
         ozetBilgisiYaz()
 
+
+        // RECYCLER VİEW
         binding.recyclerViewGelirGider.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
         binding.recyclerViewGelirGider.adapter = gelirGiderRWAdapter
         binding.recyclerViewGelirGider.setHasFixedSize(true)
 
-
+        //FİLTRELE
         binding.buttonFiltre.setOnClickListener {
             if (!filtreVarMi){
                 SearchDialogFragment(harcamaTipiAdListesi,this).show(childFragmentManager,"ara")
@@ -81,11 +86,52 @@ class Ozet : Fragment(), SearchDialogFragment.SeciliItemListener {
                 filtreVarMi = !filtreVarMi
                 binding.buttonFiltre.setText(requireContext().getString(R.string.filtrele))
             }
-
-
         }
+
+        //ARAMA
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+                if (p0 != null) {
+                    aramaYap(p0)
+                }
+                return false
+            }
+
+            override fun onQueryTextChange(p0: String?): Boolean {
+                if (p0 != null) {
+                    aramaYap(p0)
+                }
+                return false
+            }
+        })
     }
 
+    private fun aramaYap(p0 : String) {
+        val p0Lower = p0.lowercase()
+        searchGelirGiderList.clear()
+        if (filtreVarMi){
+            filtreliGelirGiderList.forEach {
+                if (it.ad != null){
+                    val kucukAd = it.ad!!.lowercase()
+                    if (kucukAd.startsWith(p0Lower)){
+                        searchGelirGiderList.add(it)
+                    }
+                }
+            }
+        }
+        else{
+            gelirGiderList.forEach {
+                if (it.ad != null){
+                    val kucukAd = it.ad!!.lowercase()
+                    if (kucukAd.startsWith(p0Lower)){
+                        searchGelirGiderList.add(it)
+                    }
+                }
+            }
+        }
+        gelirGiderRWAdapter.gelirGiderListGuncelle(searchGelirGiderList)
+
+    }
 
     private fun ozetBilgisiYaz(){
 
@@ -111,10 +157,11 @@ class Ozet : Fragment(), SearchDialogFragment.SeciliItemListener {
     }
 
     private fun secilenGelirGiderClick(gelenGelirGider: GelirGider){
-        if (gelenGelirGider != null){
-            Log.e("Tıklanan Gelir Gider",gelenGelirGider.ad!!)
-        }
+        val gecisAction = OzetDirections.ozetToGelirGiderDetay(gelenGelirGider)
+        findNavController().navigate(gecisAction)
+
     }
+
     private fun yukleGelirGiderList(){
         gelirGiderTakipDatabase.gelirGiderDAO().tumGelirGider().forEach {
             if (it != null){
@@ -153,7 +200,6 @@ class Ozet : Fragment(), SearchDialogFragment.SeciliItemListener {
         gelirGiderTakipDatabase.gelirGiderDAO().gelirGiderSil(silinecekGelirGider)
         gelirGiderList.remove(silinecekGelirGider)
         ozetBilgisiYaz()
-
     }
 
 
@@ -193,43 +239,46 @@ class Ozet : Fragment(), SearchDialogFragment.SeciliItemListener {
     }
 
     private fun harcamaTipleriGetir(){
+        harcamaTipleri.clear()
+        harcamaTipiAdListesi.clear()
         gelirGiderTakipDatabase.harcamaTipiDAO().tumHarcamaTipi().forEach {
             if (it != null){
                 harcamaTipleri.add(it)
                 harcamaTipiAdListesi.add(it.ad)
-
             }
         }
     }
 
-    override fun seciliItem(seciliItem: ArrayList<String>) {
+    override fun seciliFiltre(seciliFiltreler: ArrayList<String>) {
         filtreliGelirGiderList.clear()
-
-        filtreVarMi = seciliItem.size > 0
+        filtreVarMi = seciliFiltreler.size > 0
         if (filtreVarMi){
             binding.buttonFiltre.setText(requireContext().getString(R.string.filtre_kaldır))
         }
         val filtrelenecekHarcamaTipleri : ArrayList<HarcamaTipi> = arrayListOf()
-        seciliItem.forEach {
+        seciliFiltreler.forEach {
+            //DÜZENLİ İŞLEM
             if (it == requireContext().getString(R.string.duzenli_islem)){
-                //TODO düzenli işlemleri listele
                  gelirGiderTakipDatabase.gelirGiderDAO().duzenliGelirGider().forEach{ gelirGider ->
                      if (gelirGider != null)
                         filtreliGelirGiderList.add(gelirGider)
                  }
             }
+            // GELİRLERİM
             else if (it == requireContext().getString(R.string.gelirlerim)){
                 gelirGiderTakipDatabase.gelirGiderDAO().gelirlerim().forEach { gelirim ->
                     if (gelirim != null)
                         filtreliGelirGiderList.add(gelirim)
                 }
             }
+            //GİDERLERİM
             else if (it == requireContext().getString(R.string.giderlerim)){
                 gelirGiderTakipDatabase.gelirGiderDAO().giderlerim().forEach { giderim ->
                     if (giderim !=null)
                         filtreliGelirGiderList.add(giderim)
                 }
             }
+            // HARCAMA TİPLERİ
             else{
                 val databaseReturnHarcamaTipi = gelirGiderTakipDatabase.harcamaTipiDAO().harcamaTipiGetirAd(it)
                 if (databaseReturnHarcamaTipi != null){
@@ -237,7 +286,6 @@ class Ozet : Fragment(), SearchDialogFragment.SeciliItemListener {
                 }
             }
         }
-
         filtrelenecekHarcamaTipleri.forEach {
             gelirGiderTakipDatabase.gelirGiderDAO().harcamaTipiGelirGider(it.id).forEach { gelirGider ->
                 if (gelirGider != null)

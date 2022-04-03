@@ -39,9 +39,4 @@ data class GelirGider(
     var aktif_pasif : Boolean? = null, // True => Aktif, False = Pasif
 
 
-
-
-) : Serializable {
-
-
-}
+) : Serializable

@@ -18,7 +18,11 @@
         android:id="@+id/ozet"
         android:name="com.bilgehankalay.gelirgidertakibi.fragment.Ozet"
         android:label="fragment_ozet"
-        tools:layout="@layout/fragment_ozet" />
+        tools:layout="@layout/fragment_ozet" >
+        <action
+            android:id="@+id/ozet_to_gelirGiderDetay"
+            app:destination="@id/gelirGiderDetay" />
+    </fragment>
     <fragment
         android:id="@+id/gelirEkle"
         android:name="com.bilgehankalay.gelirgidertakibi.fragment.GelirEkle"
@@ -33,4 +37,13 @@
         android:name="com.bilgehankalay.gelirgidertakibi.fragment.Rapor"
         android:label="fragment_rapor"
         tools:layout="@layout/fragment_rapor" />
+    <fragment
+        android:id="@+id/gelirGiderDetay"
+        android:name="com.bilgehankalay.gelirgidertakibi.fragment.GelirGiderDetay"
+        android:label="fragment_gelir_gider_detay"
+        tools:layout="@layout/fragment_gelir_gider_detay" >
+        <argument
+            android:name="gelenGelirGider"
+            app:argType="com.bilgehankalay.gelirgidertakibi.Model.GelirGider" />
+    </fragment>
 </navigation>

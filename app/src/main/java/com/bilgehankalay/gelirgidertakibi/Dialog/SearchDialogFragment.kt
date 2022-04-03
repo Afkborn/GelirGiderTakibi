@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.DialogFragment
 import com.bilgehankalay.gelirgidertakibi.R
 
@@ -14,7 +13,7 @@ class SearchDialogFragment(itemsArrayList : ArrayList<String>, private val secil
     val itemsArrayList = itemsArrayList
 
     interface SeciliItemListener{
-        fun seciliItem(seciliItem : ArrayList<String>)
+        fun seciliFiltre(seciliItem : ArrayList<String>)
     }
 
 
@@ -42,7 +41,7 @@ class SearchDialogFragment(itemsArrayList : ArrayList<String>, private val secil
                         selectedItems.forEach { item ->
                             selectedItemStr.add(charSequences[item].toString())
                         }
-                        seciliItemListener.seciliItem(selectedItemStr)
+                        seciliItemListener.seciliFiltre(selectedItemStr)
                     }
                 )
 
