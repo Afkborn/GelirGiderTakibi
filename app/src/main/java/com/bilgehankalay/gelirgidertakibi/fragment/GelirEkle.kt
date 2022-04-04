@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
@@ -39,7 +40,7 @@ class GelirEkle : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        tekrarSpinnerYukle()
         binding.also {
             it.buttonTemizleGelir.setOnClickListener {
                 temizle()
@@ -47,9 +48,11 @@ class GelirEkle : Fragment() {
             it.switchDuzenliMiGelir.setOnCheckedChangeListener{_, stateBool ->
                 if (stateBool){
                     //TODO düzenli işlem ekran görünür yap
+                    binding.spinnerYinele.visibility = View.VISIBLE
                 }
                 else{
                     //TODO düzenli işlem ekran gizli yap
+                    binding.spinnerYinele.visibility = View.INVISIBLE
                 }
             }
             it.buttonEkleGelir.setOnClickListener {
@@ -71,6 +74,18 @@ class GelirEkle : Fragment() {
             it.editTextMiktarGelir.setText("")
             it.radioGroup.clearCheck()
             it.switchDuzenliMiGelir.isChecked = false
+        }
+    }
+
+    private fun tekrarSpinnerYukle(){
+        binding.spinnerYinele.visibility = View.INVISIBLE
+        ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.tekrar_secenekler,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            binding.spinnerYinele.adapter = adapter
         }
     }
 

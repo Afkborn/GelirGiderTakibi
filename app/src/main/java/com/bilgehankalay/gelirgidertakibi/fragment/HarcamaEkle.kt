@@ -44,7 +44,7 @@ class HarcamaEkle : Fragment() {
         temizle()
         harcamaTipleriGetir()
         loadSpinner()
-
+        tekrarSpinnerYukle()
         binding.also {
             it.buttonTemizleHarcama.setOnClickListener {
                 temizle()
@@ -58,9 +58,11 @@ class HarcamaEkle : Fragment() {
             it.switchDuzenliMiHarcama.setOnCheckedChangeListener{_, stateBool ->
                 if (stateBool){
                     //TODO düzenli işlem ekran görünür yap
+                    binding.spinnerYineleHarcama.visibility = View.VISIBLE
                 }
                 else{
                     //TODO düzenli işlem ekran gizli yap
+                    binding.spinnerYineleHarcama.visibility = View.INVISIBLE
                 }
             }
             it.spinnerHarcamaTipi.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
@@ -83,6 +85,18 @@ class HarcamaEkle : Fragment() {
                 harcamaTipiAdListesi.add(it.ad)
 
             }
+        }
+    }
+
+    private fun tekrarSpinnerYukle(){
+        binding.spinnerYineleHarcama.visibility = View.INVISIBLE
+        ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.tekrar_secenekler,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            binding.spinnerYineleHarcama.adapter = adapter
         }
     }
 
@@ -126,8 +140,9 @@ class HarcamaEkle : Fragment() {
             val eklenme = System.currentTimeMillis() / 1000L;
 
             val duzenli_mi = it.switchDuzenliMiHarcama.isChecked
-            // TODO düzenli işlem listener ekle
-            // TODO düzenli işlem zaman al
+            if (duzenli_mi){
+
+            }
 
             return GelirGider(
                 tip = 1,

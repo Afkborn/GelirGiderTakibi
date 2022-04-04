@@ -32,11 +32,13 @@ data class GelirGider(
     @ColumnInfo(name = "duzenli_mi")
     var duzenli_mi : Boolean? = null,
 
-    @ColumnInfo(name = "tekrar_suresi")
-    var tekrar_suresi : Int? = null,
+    @ColumnInfo(name = "tekrar_tipi")
+    var tekrar_tipi : Int? = null,
+    //0 => Hergün, 1 => Hafta içi, 2 => Hafta sonu, 3 => Her Hafta, 4 => Her 2 haftada bir, 5 => Her ay
 
     @ColumnInfo(name = "aktif_pasif")
     var aktif_pasif : Boolean? = null, // True => Aktif, False = Pasif
+
 
 
 ) : Serializable

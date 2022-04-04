@@ -8,6 +8,8 @@
     <string name="rapor">Rapor</string>
     <string name="giderlerim">Giderlerim</string>
     <string name="gelirlerim">Gelirlerim</string>
+    <string name="gelir">Gelir</string>
+    <string name="gider">Gider</string>
     <string name="net">Net</string>
     <string name="eksi_bakiye">\u002D %1$s</string>
     <string name="arti_bakiye">\u002B %1$s</string>
@@ -24,6 +26,7 @@
     <string name="cocuk">Çocuk Bakım</string>
     <string name="seyahat">Seyahat</string>
     <string name="gelir_tipi">Gelir Tipi</string>
+    <string name="harcama_tipi">Harcama Tipi</string>
     <string name="aktif_gelir">Aktif Gelir</string>
     <string name="pasif_gelir">Pasif Gelir</string>
     <string name="ad">Ad</string>
@@ -46,7 +49,18 @@
     <string name="iptal">İptal</string>
     <string name="filtrele">Filtrele</string>
     <string name="filtre_kaldır">Filtre Kaldır</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="sil">sil</string>
+    <string name="kaydet">kaydet</string>
+    <string name="tekrar_suresi">Tekrar Süresi</string>
+    <string name="eklenme_zamani">Eklenme Zamanı</string>
+    
+    <string-array name="tekrar_secenekler">
+        <item>Her Gün</item>
+        <item>Hafta içi</item>
+        <item>Hafta sonları</item>
+        <item>Her Hafta</item>
+        <item>Her Ay</item>
+        <item>Her Yıl</item>
+    </string-array>
 
 </resources>

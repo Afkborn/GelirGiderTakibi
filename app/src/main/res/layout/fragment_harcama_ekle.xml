@@ -7,12 +7,24 @@
     android:layout_height="match_parent"
     tools:context=".fragment.HarcamaEkle">
 
+    <Spinner
+        android:id="@+id/spinner_yineleHarcama"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/switch_duzenliMiHarcama"
+        tools:ignore="SpeakableTextPresentCheck" />
+
     <Button
         android:id="@+id/button_temizleHarcama"
         android:layout_width="150dp"
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="16dp"
         android:text="@string/temizle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -22,7 +34,7 @@
         android:layout_width="150dp"
         android:layout_height="50dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="16dp"
         android:text="@string/ekle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -45,7 +57,7 @@
         android:layout_marginTop="16dp"
         android:ems="10"
         android:hint="@string/aciklama"
-        android:inputType="numberDecimal"
+        android:inputType="text"
         android:textAlignment="center"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"

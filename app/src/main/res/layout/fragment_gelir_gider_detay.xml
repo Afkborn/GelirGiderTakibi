@@ -1,14 +1,173 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout_gelirGiderDetay"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragment.GelirGiderDetay">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <EditText
+        android:id="@+id/editText_aciklama"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:hint="@string/aciklama"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText_miktar" />
 
-</FrameLayout>
+    <EditText
+        android:id="@+id/editText_miktar"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:hint="@string/miktar"
+        android:inputType="numberDecimal"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText_ad" />
+
+    <EditText
+        android:id="@+id/editText_ad"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:hint="@string/ad"
+        android:minWidth="48dp"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_gelirGider" />
+
+    <TextView
+        android:id="@+id/textView_gelirGider"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Gelir/Gider" />
+
+    <CheckBox
+        android:id="@+id/checkBox_duzenliMi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:enabled="false"
+        android:text="@string/duzenli_islem"
+        app:layout_constraintStart_toStartOf="@+id/editText_aciklama"
+        app:layout_constraintTop_toBottomOf="@+id/editText_aciklama" />
+
+    <Button
+        android:id="@+id/button_sil"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginBottom="48dp"
+        android:text="@string/sil"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button_kaydet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="48dp"
+        android:text="@string/kaydet"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/textView_eklenmeZamaniText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/eklenme_zamani"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/checkBox_duzenliMi" />
+
+    <TextView
+        android:id="@+id/textView_eklenmeZamani"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/textView_eklenmeZamaniText"
+        app:layout_constraintHorizontal_bias="0.516"
+        app:layout_constraintStart_toStartOf="@+id/textView_eklenmeZamaniText"
+        app:layout_constraintTop_toBottomOf="@+id/textView_eklenmeZamaniText"
+        tools:text="18:45 03/04/2022" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout_tekrarSuresi"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText_aciklama">
+
+        <TextView
+            android:id="@+id/textView_tekrarSuresiText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:text="@string/tekrar_suresi"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView_tekrarSuresi"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="@+id/textView_tekrarSuresiText"
+            app:layout_constraintStart_toStartOf="@+id/textView_tekrarSuresiText"
+            app:layout_constraintTop_toBottomOf="@+id/textView_tekrarSuresiText"
+            tools:text="Ayda 1" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/textView_gelirHarcamaTipiText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/gelir_tipi"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_eklenmeZamani" />
+
+    <TextView
+        android:id="@+id/textView_gelirHarcamaTipi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_gelirHarcamaTipiText"
+        tools:text="Aktif gelir/Market" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
