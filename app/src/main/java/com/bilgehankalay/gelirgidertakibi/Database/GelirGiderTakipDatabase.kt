@@ -9,7 +9,7 @@ import com.bilgehankalay.gelirgidertakibi.DAO.HarcamaTipiDAO
 import com.bilgehankalay.gelirgidertakibi.Model.GelirGider
 import com.bilgehankalay.gelirgidertakibi.Model.HarcamaTipi
 
-@Database(entities = [GelirGider::class,HarcamaTipi::class], version = 6)
+@Database(entities = [GelirGider::class,HarcamaTipi::class], version = 7)
 abstract class GelirGiderTakipDatabase : RoomDatabase() {
     abstract fun gelirGiderDAO() : GelirGiderDAO
     abstract fun harcamaTipiDAO() : HarcamaTipiDAO

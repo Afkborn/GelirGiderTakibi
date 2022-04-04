@@ -53,7 +53,12 @@
     <string name="kaydet">kaydet</string>
     <string name="tekrar_suresi">Tekrar Süresi</string>
     <string name="eklenme_zamani">Eklenme Zamanı</string>
-    
+    <string name="yinele">Yinele</string>
+    <string name="tarih_sec">Tarih Seç</string>
+
+    <string name="gg_aa_yyyy_text">GG/AA/YYYY</string>
+    <string name="date_format">dd/MM/yyyy</string>
+
     <string-array name="tekrar_secenekler">
         <item>Her Gün</item>
         <item>Hafta içi</item>
