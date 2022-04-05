@@ -182,7 +182,7 @@ class HarcamaEkle : Fragment() {
 
             val miktar = it.editTextMiktarHarcama.text.toString().toDouble()
             val aciklama = it.editTextAciklamaHarcama.text.toString()
-            val eklenme = System.currentTimeMillis() / 1000L;
+            val eklenme = System.currentTimeMillis();
 
             val duzenli_mi = it.switchDuzenliMiHarcama.isChecked
             if (duzenli_mi){

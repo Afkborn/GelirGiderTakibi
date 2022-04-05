@@ -40,15 +40,12 @@ class GelirGiderRW(private var gelirGiderList : ArrayList<GelirGider>)  : Recycl
     override fun onBindViewHolder(holder: GelirGiderCardTasarim, position: Int) {
         val gelirGider = gelirGiderList[position]
         holder.gelirGiderCardTasarimBinding.also {
-
-
             it.root.setOnClickListener {
                 onItemClick(gelirGider)
             }
-
             val formatlananMiktar = NumberFormat.getCurrencyInstance(Locale("tr","TR")).format(gelirGider.miktar)
             if (gelirGider.tip == 0){
-
+                //GELİR
                 it.imageViewGelirGiderIco.visibility = View.INVISIBLE
                 it.imageViewHarcamaTipiIco.setImageResource(R.drawable.dollar)
                 it.textViewHarcamaTipiAdi.visibility = View.INVISIBLE
@@ -58,8 +55,11 @@ class GelirGiderRW(private var gelirGiderList : ArrayList<GelirGider>)  : Recycl
                 val yuvarlananSayi = String.format("%.2f", harcamaYuzde)
                 it.textViewHarcamaYuzde.text  = rw_parent!!.context.getString(R.string.harcama_yuzde,yuvarlananSayi)
                 it.textViewHarcamaMiktar.setTextColor(Color.parseColor("#00cc00"))
-            } //GELİR
-            else{
+                it.progressBarHarcamaYuzde.progress = gelirGider.miktar.toInt()
+                it.textViewHarcamaAdi.text = gelirGider.ad
+
+            }
+            else if (gelirGider.tip == 1){
                 //GİDER
                 it.imageViewGelirGiderIco.visibility = View.INVISIBLE
                 //it.imageViewGelirGiderIco.setImageResource(R.drawable.up_arrow)
@@ -82,21 +82,24 @@ class GelirGiderRW(private var gelirGiderList : ArrayList<GelirGider>)  : Recycl
                 else{
                     it.imageViewHarcamaTipiIco.setImageResource(R.drawable.error)
                 }
+                it.progressBarHarcamaYuzde.progress = gelirGider.miktar.toInt()
+                it.textViewHarcamaAdi.text = gelirGider.ad
 
+            }
+            else if (gelirGider.tip == 2){
+                // TEKRAR
 
-
-
-
-            } //GİDER
-
-            // ORTAK
-            it.progressBarHarcamaYuzde.progress = gelirGider.miktar.toInt()
-            it.textViewHarcamaAdi.text = gelirGider.ad
+            }
 
             //long to date
             val sdf = SimpleDateFormat("dd/MM/yyyy")
-            val date = Date(gelirGider.eklenme_zamani * 1000)
+            val date = Date(gelirGider.eklenme_zamani )
             it.textViewHarcamaTarih.text = sdf.format(date)
+
+            if (gelirGider.yinelenen_mi == true){
+                it.imageViewGelirGiderIco.visibility = View.VISIBLE
+                it.imageViewGelirGiderIco.setImageResource(R.drawable.repeat)
+            }
 
 
         }

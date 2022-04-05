@@ -28,4 +28,13 @@ interface GelirGiderDAO {
 
     @Query("SELECT * FROM gelir_gider WHERE tip = 1")
     fun giderlerim() : List<GelirGider?>
+
+    @Query("SELECT * FROM gelir_gider WHERE eklenme_zamani =:eklenmeZamani")
+    fun eklenmeZamaniGelirGider(eklenmeZamani : Long) : GelirGider?
+
+    @Query("SELECT * FROM gelir_gider WHERE tip != 3 ORDER BY eklenme_zamani DESC")
+    fun tipBirIkiGelirGider() : List<GelirGider?>
+
+    @Query("SELECT * FROM gelir_gider WHERE id = :id")
+    fun idGelirGider(id : Int) : GelirGider?
 }

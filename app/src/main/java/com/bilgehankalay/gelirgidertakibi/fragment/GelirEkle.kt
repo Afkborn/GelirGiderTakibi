@@ -3,6 +3,7 @@ package com.bilgehankalay.gelirgidertakibi.fragment
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.text.Editable
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +19,7 @@ import com.bilgehankalay.gelirgidertakibi.R
 import com.bilgehankalay.gelirgidertakibi.databinding.FragmentGelirEkleBinding
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class GelirEkle : Fragment() {
@@ -79,12 +81,58 @@ class GelirEkle : Fragment() {
                 }
             }
             it.buttonEkleGelir.setOnClickListener {
+                val gelenGelir = gelirOlustur()
 
-                gelirGiderTakipDatabase.gelirGiderDAO().gelirGiderEkle(gelirOlustur())
+                gelirGiderTakipDatabase.gelirGiderDAO().gelirGiderEkle(gelenGelir)
+
+                //GET LAST INSERT ROW ID
+                val sonEklenenGelir = gelirGiderTakipDatabase.gelirGiderDAO().eklenmeZamaniGelirGider(gelenGelir.eklenme_zamani)
+                if (sonEklenenGelir != null && gelenGelir.duzenli_mi == true){
+                    val eklenecekGelirler : ArrayList<GelirGider> = arrayListOf()
+                    // gelir eklenmiş ID bilgisini almışız, düzenli bilgisi var
+                    when (gelenGelir.tekrar_tipi){
+                        //0 => Hergün, 1 => Hafta içi, 2 => Hafta sonu, 3 => Her Hafta, 4 => Her 2 haftada bir, 5 => Her ay
+                        0 -> {
+                            val oneDay = 86400000
+                            var kacGunEklenecek = 0
+                            var gelirEklenmeTarihi = gelenGelir.eklenme_zamani
+                            while (gelirEklenmeTarihi <= gelenGelir.bitis_tarihi!!){
+                                if (gelirEklenmeTarihi + oneDay <= gelenGelir.bitis_tarihi!!){
+                                    kacGunEklenecek += 1
+                                    val eklenecekGelir = GelirGider(
+                                        tip = 3,
+                                        ad = gelenGelir.ad,
+                                        miktar = gelenGelir.miktar,
+                                        aciklama = gelenGelir.aciklama,
+                                        eklenme_zamani = gelirEklenmeTarihi + oneDay,
+                                        aktif_pasif = gelenGelir.aktif_pasif,
+                                        bitis_tarihi = gelenGelir.bitis_tarihi,
+                                        ana_harcama = sonEklenenGelir.id,
+                                        duzenli_mi = gelenGelir.duzenli_mi,
+                                        tekrar_tipi = gelenGelir.tekrar_tipi,
+                                        eklenmis_mi = false
+                                    )
+                                    eklenecekGelirler.add(eklenecekGelir)
+                                }
+                                gelirEklenmeTarihi += oneDay
+                            }
+                            Log.e("LOG","Toplam eklenecek gün sayısı $kacGunEklenecek")
+                            eklenecekGelirler.forEach {
+                                gelirGiderTakipDatabase.gelirGiderDAO().gelirGiderEkle(it)
+                            }
+                        }
+                        1 -> {
+
+                        }
+                        2 -> {}
+                        3 -> {}
+                        4 -> {}
+                        5 -> {}
+                    }
+                }
+
                 Toast.makeText(requireContext(),"Gelir eklendi",Toast.LENGTH_LONG).show()
                 temizle()
-
-
                 findNavController().navigate(R.id.action_gelirEkle_to_ozet)
             }
             it.buttonTarihSec.setOnClickListener(object : View.OnClickListener {
@@ -148,11 +196,16 @@ class GelirEkle : Fragment() {
 
             val miktar = it.editTextMiktarGelir.text.toString().toDouble()
             val aciklama = it.editTextAciklamaGelir.text.toString()
-            val eklenme = System.currentTimeMillis() / 1000L;
+            val eklenme = System.currentTimeMillis()
 
             val duzenli_mi = it.switchDuzenliMiGelir.isChecked
-            // TODO düzenli işlem listener ekle
-            // TODO düzenli işlem zaman al
+            var tekrar_tipi: Int? = null
+            var bitis_tarihi : Long? = null
+            if (duzenli_mi){
+                //0 => Hergün, 1 => Hafta içi, 2 => Hafta sonu, 3 => Her Hafta, 4 => Her 2 haftada bir, 5 => Her ay
+                tekrar_tipi = binding.spinnerYinele.selectedItemPosition
+                bitis_tarihi = cal.timeInMillis + 100000
+            }
 
             return GelirGider(
                 tip = 0,
@@ -161,7 +214,9 @@ class GelirEkle : Fragment() {
                 aciklama = aciklama,
                 aktif_pasif = aktif_pasif,
                 eklenme_zamani = eklenme,
-                duzenli_mi = duzenli_mi
+                duzenli_mi = duzenli_mi,
+                tekrar_tipi = tekrar_tipi,
+                bitis_tarihi = bitis_tarihi
             )
 
         }

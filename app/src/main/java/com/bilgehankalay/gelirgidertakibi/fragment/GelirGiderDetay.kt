@@ -78,7 +78,7 @@ class GelirGiderDetay : Fragment() {
     }
 
     fun convertLongToTime(time: Long): String {
-        val date = Date(time*1000)
+        val date = Date(time)
         val format = SimpleDateFormat("HH:mm dd/MM/yyyy")
         return format.format(date)
     }

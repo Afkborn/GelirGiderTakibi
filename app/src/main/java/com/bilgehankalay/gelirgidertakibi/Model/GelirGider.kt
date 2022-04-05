@@ -45,5 +45,11 @@ data class GelirGider(
     @ColumnInfo(name = "bitis_tarihi")
     var bitis_tarihi : Long? = null,
 
+    @ColumnInfo(name = "eklenmis_mi")
+    var eklenmis_mi : Boolean? = null,
+
+    @ColumnInfo(name = "yinelenen_mi")
+    var yinelenen_mi : Boolean? = null
+
 
 ) : Serializable

@@ -32,6 +32,8 @@ class Ozet : Fragment(), SearchDialogFragment.SeciliItemListener {
     var filtreliGelirGiderList  : ArrayList<GelirGider> = arrayListOf()
     var searchGelirGiderList : ArrayList<GelirGider> = arrayListOf()
 
+    var yinelenenGelirGiderList : ArrayList<GelirGider> = arrayListOf()
+
     var toplamGelir = 0.0
     var toplamGider = 0.0
 
@@ -64,7 +66,7 @@ class Ozet : Fragment(), SearchDialogFragment.SeciliItemListener {
         yukleGelirGiderList()
         harcamaTipleriGetir()
         recyclerViewSetSwap()
-
+        kontrolYinelenenGelirGiderList()
 
         gelirGiderRWAdapter  = GelirGiderRW(gelirGiderList)
         gelirGiderRWAdapter!!.onItemClick = ::secilenGelirGiderClick // High Order Function
@@ -75,6 +77,7 @@ class Ozet : Fragment(), SearchDialogFragment.SeciliItemListener {
         binding.recyclerViewGelirGider.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
         binding.recyclerViewGelirGider.adapter = gelirGiderRWAdapter
         binding.recyclerViewGelirGider.setHasFixedSize(true)
+
 
         //FİLTRELE
         binding.buttonFiltre.setOnClickListener {
@@ -154,6 +157,8 @@ class Ozet : Fragment(), SearchDialogFragment.SeciliItemListener {
         harcamaTipiAdListesi.clear()
         harcamaTipleri.clear()
         filtreliGelirGiderList.clear()
+        yinelenenGelirGiderList.clear()
+        searchGelirGiderList.clear()
     }
 
     private fun secilenGelirGiderClick(gelenGelirGider: GelirGider){
@@ -165,7 +170,42 @@ class Ozet : Fragment(), SearchDialogFragment.SeciliItemListener {
     private fun yukleGelirGiderList(){
         gelirGiderTakipDatabase.gelirGiderDAO().tumGelirGider().forEach {
             if (it != null){
-                gelirGiderList.add(it)
+                if (it.tip == 3){
+                    yinelenenGelirGiderList.add(it)
+                }
+                else{
+                    gelirGiderList.add(it)
+                }
+
+            }
+        }
+    }
+
+    private fun kontrolYinelenenGelirGiderList(){
+        yinelenenGelirGiderList.forEach {
+            if (it != null){
+                if (System.currentTimeMillis() >= it.eklenme_zamani && it.eklenmis_mi == false){
+                    Log.e("LOG","Eklenecek eleman var")
+                    val anaGelirGider = gelirGiderTakipDatabase.gelirGiderDAO().idGelirGider(it.ana_harcama!!)
+                    anaGelirGider!!.eklenme_zamani = it.eklenme_zamani
+                    it.eklenmis_mi = true
+                    val eklenecekGelirGider = GelirGider(tip = anaGelirGider.tip, ad = anaGelirGider.ad, miktar = anaGelirGider.miktar, aciklama = anaGelirGider.aciklama, eklenme_zamani = it.eklenme_zamani, duzenli_mi = anaGelirGider.duzenli_mi, tekrar_tipi = anaGelirGider.tekrar_tipi, yinelenen_mi = true)
+                    if (anaGelirGider.tip == 0){
+                        //gelir
+                        eklenecekGelirGider.aktif_pasif = anaGelirGider.aktif_pasif
+
+                    }
+                    else if (anaGelirGider.tip == 1){
+                        //gider
+                        eklenecekGelirGider.harcama_tipi_id = anaGelirGider.harcama_tipi_id
+                    }
+
+                    gelirGiderTakipDatabase.gelirGiderDAO().gelirGiderEkle(eklenecekGelirGider)
+                    gelirGiderTakipDatabase.gelirGiderDAO().gelirGiderGuncelle(it)
+                    gelirGiderList.add(0,eklenecekGelirGider)
+
+
+                }
             }
         }
     }
@@ -222,7 +262,9 @@ class Ozet : Fragment(), SearchDialogFragment.SeciliItemListener {
 
                     gelirGiderRWAdapter.gelirGiderListGuncelle(gelirGiderList)
                     ozetBilgisiYaz()
-                    filtreVarMi = !filtreVarMi
+                    if (filtreVarMi){
+                        filtreVarMi = !filtreVarMi
+                    }
                     binding.buttonFiltre.setText(requireContext().getString(R.string.filtrele))
                 }
                 DialogInterface.BUTTON_NEGATIVE -> {
