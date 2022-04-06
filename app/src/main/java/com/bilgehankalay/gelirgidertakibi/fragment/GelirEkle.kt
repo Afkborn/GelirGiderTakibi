@@ -26,7 +26,10 @@ class GelirEkle : Fragment() {
     private lateinit var binding : FragmentGelirEkleBinding
 
     private lateinit var gelirGiderTakipDatabase: GelirGiderTakipDatabase
-
+    val oneDay = 86400000
+    val oneWeek = oneDay * 7
+    val oneMounth = oneWeek * 4
+    val oneYear = oneMounth * 12
     var cal = Calendar.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,45 +92,99 @@ class GelirEkle : Fragment() {
                 val sonEklenenGelir = gelirGiderTakipDatabase.gelirGiderDAO().eklenmeZamaniGelirGider(gelenGelir.eklenme_zamani)
                 if (sonEklenenGelir != null && gelenGelir.duzenli_mi == true){
                     val eklenecekGelirler : ArrayList<GelirGider> = arrayListOf()
+                    var kacGunEklenecek = 0
                     // gelir eklenmiş ID bilgisini almışız, düzenli bilgisi var
                     when (gelenGelir.tekrar_tipi){
-                        //0 => Hergün, 1 => Hafta içi, 2 => Hafta sonu, 3 => Her Hafta, 4 => Her 2 haftada bir, 5 => Her ay
+                        //0 => Hergün, 1 => Hafta içi, 2 => Hafta sonu, 3 => Her Hafta, 4 => Her 2 haftada bir, 5 => Her ay, 6 => Her yıl, 7 => ÖZEL ???
                         0 -> {
-                            val oneDay = 86400000
-                            var kacGunEklenecek = 0
                             var gelirEklenmeTarihi = gelenGelir.eklenme_zamani
                             while (gelirEklenmeTarihi <= gelenGelir.bitis_tarihi!!){
                                 if (gelirEklenmeTarihi + oneDay <= gelenGelir.bitis_tarihi!!){
                                     kacGunEklenecek += 1
-                                    val eklenecekGelir = GelirGider(
-                                        tip = 3,
-                                        ad = gelenGelir.ad,
-                                        miktar = gelenGelir.miktar,
-                                        aciklama = gelenGelir.aciklama,
-                                        eklenme_zamani = gelirEklenmeTarihi + oneDay,
-                                        aktif_pasif = gelenGelir.aktif_pasif,
-                                        bitis_tarihi = gelenGelir.bitis_tarihi,
-                                        ana_harcama = sonEklenenGelir.id,
-                                        duzenli_mi = gelenGelir.duzenli_mi,
-                                        tekrar_tipi = gelenGelir.tekrar_tipi,
-                                        eklenmis_mi = false
-                                    )
+                                    val eklenecekGelir = yinelenenGelirOlustur(gelenGelir,gelirEklenmeTarihi,sonEklenenGelir)
                                     eklenecekGelirler.add(eklenecekGelir)
                                 }
                                 gelirEklenmeTarihi += oneDay
                             }
-                            Log.e("LOG","Toplam eklenecek gün sayısı $kacGunEklenecek")
-                            eklenecekGelirler.forEach {
-                                gelirGiderTakipDatabase.gelirGiderDAO().gelirGiderEkle(it)
-                            }
                         }
                         1 -> {
-
+                            var harcamaEklenmeTarihi = gelenGelir.eklenme_zamani
+                            while (harcamaEklenmeTarihi <= gelenGelir.bitis_tarihi!!){
+                                if (harcamaEklenmeTarihi + oneDay <= gelenGelir.bitis_tarihi!!){
+                                    val simpleDate = SimpleDateFormat("u")
+                                    val myDate = Date(harcamaEklenmeTarihi+oneDay)
+                                    if (simpleDate.format(myDate).toInt() <= 5){
+                                        kacGunEklenecek += 1
+                                        val eklenecekGelir = yinelenenGelirOlustur(gelenGelir,harcamaEklenmeTarihi,sonEklenenGelir)
+                                        eklenecekGelirler.add(eklenecekGelir)
+                                    }
+                                }
+                                harcamaEklenmeTarihi += oneDay
+                            }
                         }
-                        2 -> {}
-                        3 -> {}
-                        4 -> {}
-                        5 -> {}
+                        2 -> {
+                            var harcamaEklenmeTarihi = gelenGelir.eklenme_zamani
+                            while (harcamaEklenmeTarihi <= gelenGelir.bitis_tarihi!!){
+                                if (harcamaEklenmeTarihi + oneDay <= gelenGelir.bitis_tarihi!!){
+                                    val simpleDate = SimpleDateFormat("u")
+                                    val myDate = Date(harcamaEklenmeTarihi+oneDay)
+                                    if (simpleDate.format(myDate).toInt() > 5){
+                                        kacGunEklenecek += 1
+                                        val eklenecekGelir = yinelenenGelirOlustur(gelenGelir,harcamaEklenmeTarihi,sonEklenenGelir)
+                                        eklenecekGelirler.add(eklenecekGelir)
+                                    }
+                                }
+                                harcamaEklenmeTarihi += oneDay
+                            }
+                        }
+                        3 -> {
+                            var gelirEklenmeTarihi = gelenGelir.eklenme_zamani
+                            while (gelirEklenmeTarihi <= gelenGelir.bitis_tarihi!!){
+                                if (gelirEklenmeTarihi + oneWeek <= gelenGelir.bitis_tarihi!!){
+                                    kacGunEklenecek += 1
+                                    val eklenecekGelir = yinelenenGelirOlustur(gelenGelir,gelirEklenmeTarihi,sonEklenenGelir)
+                                    eklenecekGelirler.add(eklenecekGelir)
+                                }
+                                gelirEklenmeTarihi += oneWeek
+                            }
+                        }
+                        4 -> {
+                            var gelirEklenmeTarihi = gelenGelir.eklenme_zamani
+                            while (gelirEklenmeTarihi <= gelenGelir.bitis_tarihi!!){
+                                if (gelirEklenmeTarihi + (oneWeek * 2) <= gelenGelir.bitis_tarihi!!){
+                                    kacGunEklenecek += 1
+                                    val eklenecekGelir = yinelenenGelirOlustur(gelenGelir,gelirEklenmeTarihi,sonEklenenGelir)
+                                    eklenecekGelirler.add(eklenecekGelir)
+                                }
+                                gelirEklenmeTarihi += oneWeek * 2
+                            }
+                        }
+                        5 -> {
+                            var gelirEklenmeTarihi = gelenGelir.eklenme_zamani
+                            while (gelirEklenmeTarihi <= gelenGelir.bitis_tarihi!!){
+                                if (gelirEklenmeTarihi + oneMounth  <= gelenGelir.bitis_tarihi!!){
+                                    kacGunEklenecek += 1
+                                    val eklenecekGelir = yinelenenGelirOlustur(gelenGelir,gelirEklenmeTarihi,sonEklenenGelir)
+                                    eklenecekGelirler.add(eklenecekGelir)
+                                }
+                                gelirEklenmeTarihi += oneMounth
+                            }
+                        }
+                        6 -> {
+                            var gelirEklenmeTarihi = gelenGelir.eklenme_zamani
+                            while (gelirEklenmeTarihi <= gelenGelir.bitis_tarihi!!){
+                                if (gelirEklenmeTarihi + oneYear  <= gelenGelir.bitis_tarihi!!){
+                                    kacGunEklenecek += 1
+                                    val eklenecekGelir = yinelenenGelirOlustur(gelenGelir,gelirEklenmeTarihi,sonEklenenGelir)
+                                    eklenecekGelirler.add(eklenecekGelir)
+                                }
+                                gelirEklenmeTarihi += oneYear
+                            }
+                        }
+                    }
+                    Log.e("LOG","Toplam eklenecek gün sayısı $kacGunEklenecek")
+                    eklenecekGelirler.forEach {
+                        gelirGiderTakipDatabase.gelirGiderDAO().gelirGiderEkle(it)
                     }
                 }
 
@@ -159,6 +216,22 @@ class GelirEkle : Fragment() {
             it.radioGroup.clearCheck()
             it.switchDuzenliMiGelir.isChecked = false
         }
+    }
+
+    private fun yinelenenGelirOlustur(gelenGelir : GelirGider, gelirEklenmeTarihi : Long, sonEklenenGelir : GelirGider) : GelirGider {
+        return GelirGider(
+            tip = 3,
+            ad = gelenGelir.ad,
+            miktar = gelenGelir.miktar,
+            aciklama = gelenGelir.aciklama,
+            eklenme_zamani = gelirEklenmeTarihi + oneDay,
+            bitis_tarihi = gelenGelir.bitis_tarihi,
+            ana_harcama = sonEklenenGelir.id,
+            duzenli_mi = gelenGelir.duzenli_mi,
+            tekrar_tipi = gelenGelir.tekrar_tipi,
+            eklenmis_mi = false,
+            aktif_pasif = gelenGelir.aktif_pasif,
+        )
     }
 
     private fun tekrarSpinnerYukle(){

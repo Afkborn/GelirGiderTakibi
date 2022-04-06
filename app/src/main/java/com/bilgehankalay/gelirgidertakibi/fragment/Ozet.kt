@@ -189,7 +189,16 @@ class Ozet : Fragment(), SearchDialogFragment.SeciliItemListener {
                     val anaGelirGider = gelirGiderTakipDatabase.gelirGiderDAO().idGelirGider(it.ana_harcama!!)
                     anaGelirGider!!.eklenme_zamani = it.eklenme_zamani
                     it.eklenmis_mi = true
-                    val eklenecekGelirGider = GelirGider(tip = anaGelirGider.tip, ad = anaGelirGider.ad, miktar = anaGelirGider.miktar, aciklama = anaGelirGider.aciklama, eklenme_zamani = it.eklenme_zamani, duzenli_mi = anaGelirGider.duzenli_mi, tekrar_tipi = anaGelirGider.tekrar_tipi, yinelenen_mi = true)
+                    val eklenecekGelirGider = GelirGider(
+                        tip = anaGelirGider.tip,
+                        ad = anaGelirGider.ad,
+                        miktar = anaGelirGider.miktar,
+                        aciklama = anaGelirGider.aciklama,
+                        eklenme_zamani = it.eklenme_zamani,
+                        duzenli_mi = anaGelirGider.duzenli_mi,
+                        tekrar_tipi = anaGelirGider.tekrar_tipi,
+                        yinelenen_mi = true)
+
                     if (anaGelirGider.tip == 0){
                         //gelir
                         eklenecekGelirGider.aktif_pasif = anaGelirGider.aktif_pasif
