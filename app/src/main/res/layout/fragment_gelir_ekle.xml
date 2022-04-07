@@ -108,23 +108,25 @@
         android:id="@+id/textView_yineleBitis"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="20dp"
         android:text="Yineleme Bitiş Tarihi"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinner_yinele" />
 
     <EditText
         android:id="@+id/editTextDate_yinelemeBitis"
-        android:layout_width="wrap_content"
+        android:layout_width="170dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="4dp"
         android:ems="10"
+        android:enabled="false"
         android:hint="@string/gg_aa_yyyy_text"
         android:inputType="date"
         android:minHeight="48dp"
         android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView_yineleBitis" />
 
@@ -177,10 +179,11 @@
         android:id="@+id/button_tarihSec"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
         android:text="@string/tarih_sec"
-        app:layout_constraintEnd_toEndOf="@+id/editTextDate_yinelemeBitis"
-        app:layout_constraintStart_toStartOf="@+id/editTextDate_yinelemeBitis"
-        app:layout_constraintTop_toBottomOf="@+id/editTextDate_yinelemeBitis" />
+        app:layout_constraintStart_toEndOf="@+id/editTextDate_yinelemeBitis"
+        app:layout_constraintTop_toBottomOf="@+id/textView_yineleBitis" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

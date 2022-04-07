@@ -1,7 +1,6 @@
 package com.bilgehankalay.gelirgidertakibi.fragment
 
 import android.app.DatePickerDialog
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,7 +10,6 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.DatePicker
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bilgehankalay.gelirgidertakibi.Database.GelirGiderTakipDatabase
@@ -56,12 +54,11 @@ class HarcamaEkle : Fragment() {
         binding.editTextDateYinelemeBitisHarcama.setText(sdf.format(cal.time))
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         temizle()
         harcamaTipleriGetir()
-        loadSpinner()
+        kategoriSpinnerYukle()
         tekrarSpinnerYukle()
 
         val dateSetListener = object : DatePickerDialog.OnDateSetListener {
@@ -79,109 +76,112 @@ class HarcamaEkle : Fragment() {
                 temizle()
             }
             it.buttonEkleHarcama.setOnClickListener {
-                val gelenHarcama = harcamaOlustur()
-                gelirGiderTakipDatabase.gelirGiderDAO().gelirGiderEkle(gelenHarcama)
-                val sonEklenenHarcama = gelirGiderTakipDatabase.gelirGiderDAO().eklenmeZamaniGelirGider(gelenHarcama.eklenme_zamani)
-                if (sonEklenenHarcama != null && gelenHarcama.duzenli_mi == true){
-                    val eklenecekHarcamalar : ArrayList<GelirGider> = arrayListOf()
-                    var kacGunEklenecek = 0
-                    when (gelenHarcama.tekrar_tipi){
-                        //0 => Hergün, 1 => Hafta içi, 2 => Hafta sonu, 3 => Her Hafta, 4 => Her 2 haftada bir, 5 => Her ay, 6 => Her yıl, 7 => ÖZEL ???
-                        0 -> {
-                            var harcamaEklenmeTarihi = gelenHarcama.eklenme_zamani
-                            while (harcamaEklenmeTarihi <= gelenHarcama.bitis_tarihi!!){
-                                if (harcamaEklenmeTarihi + oneDay <= gelenHarcama.bitis_tarihi!!){
-                                    kacGunEklenecek += 1
-                                    val eklenecekGelir = yinelenenHarcamaOlustur(gelenHarcama,harcamaEklenmeTarihi,sonEklenenHarcama)
-                                    eklenecekHarcamalar.add(eklenecekGelir)
-                                }
-                                harcamaEklenmeTarihi += oneDay
-                            }
-                        }
-                        1 -> {
-                            var harcamaEklenmeTarihi = gelenHarcama.eklenme_zamani
-                            while (harcamaEklenmeTarihi <= gelenHarcama.bitis_tarihi!!){
-                                if (harcamaEklenmeTarihi + oneDay <= gelenHarcama.bitis_tarihi!!){
-                                    val simpleDate = SimpleDateFormat("u")
-                                    val myDate = Date(harcamaEklenmeTarihi+oneDay)
-                                    if (simpleDate.format(myDate).toInt() <= 5){
+                if (girdiKontrol()){
+                    val gelenHarcama = harcamaOlustur()
+                    gelirGiderTakipDatabase.gelirGiderDAO().gelirGiderEkle(gelenHarcama)
+                    val sonEklenenHarcama = gelirGiderTakipDatabase.gelirGiderDAO().eklenmeZamaniGelirGider(gelenHarcama.eklenme_zamani)
+                    if (sonEklenenHarcama != null && gelenHarcama.duzenli_mi == true){
+                        val eklenecekHarcamalar : ArrayList<GelirGider> = arrayListOf()
+                        var kacGunEklenecek = 0
+                        when (gelenHarcama.tekrar_tipi){
+                            //0 => Hergün, 1 => Hafta içi, 2 => Hafta sonu, 3 => Her Hafta, 4 => Her 2 haftada bir, 5 => Her ay, 6 => Her yıl, 7 => ÖZEL ???
+                            0 -> {
+                                var harcamaEklenmeTarihi = gelenHarcama.eklenme_zamani
+                                while (harcamaEklenmeTarihi <= gelenHarcama.bitis_tarihi!!){
+                                    if (harcamaEklenmeTarihi + oneDay <= gelenHarcama.bitis_tarihi!!){
                                         kacGunEklenecek += 1
                                         val eklenecekGelir = yinelenenHarcamaOlustur(gelenHarcama,harcamaEklenmeTarihi,sonEklenenHarcama)
                                         eklenecekHarcamalar.add(eklenecekGelir)
                                     }
+                                    harcamaEklenmeTarihi += oneDay
                                 }
-                                harcamaEklenmeTarihi += oneDay
                             }
-                        }
-                        2 -> {
-                            var harcamaEklenmeTarihi = gelenHarcama.eklenme_zamani
-                            while (harcamaEklenmeTarihi <= gelenHarcama.bitis_tarihi!!){
-                                if (harcamaEklenmeTarihi + oneDay <= gelenHarcama.bitis_tarihi!!){
-                                    val simpleDate = SimpleDateFormat("u")
-                                    val myDate = Date(harcamaEklenmeTarihi+oneDay)
-                                    if (simpleDate.format(myDate).toInt() > 5){
+                            1 -> {
+                                var harcamaEklenmeTarihi = gelenHarcama.eklenme_zamani
+                                while (harcamaEklenmeTarihi <= gelenHarcama.bitis_tarihi!!){
+                                    if (harcamaEklenmeTarihi + oneDay <= gelenHarcama.bitis_tarihi!!){
+                                        val simpleDate = SimpleDateFormat("u")
+                                        val myDate = Date(harcamaEklenmeTarihi+oneDay)
+                                        if (simpleDate.format(myDate).toInt() <= 5){
+                                            kacGunEklenecek += 1
+                                            val eklenecekGelir = yinelenenHarcamaOlustur(gelenHarcama,harcamaEklenmeTarihi,sonEklenenHarcama)
+                                            eklenecekHarcamalar.add(eklenecekGelir)
+                                        }
+                                    }
+                                    harcamaEklenmeTarihi += oneDay
+                                }
+                            }
+                            2 -> {
+                                var harcamaEklenmeTarihi = gelenHarcama.eklenme_zamani
+                                while (harcamaEklenmeTarihi <= gelenHarcama.bitis_tarihi!!){
+                                    if (harcamaEklenmeTarihi + oneDay <= gelenHarcama.bitis_tarihi!!){
+                                        val simpleDate = SimpleDateFormat("u")
+                                        val myDate = Date(harcamaEklenmeTarihi+oneDay)
+                                        if (simpleDate.format(myDate).toInt() > 5){
+                                            kacGunEklenecek += 1
+                                            val eklenecekGelir = yinelenenHarcamaOlustur(gelenHarcama,harcamaEklenmeTarihi,sonEklenenHarcama)
+                                            eklenecekHarcamalar.add(eklenecekGelir)
+                                        }
+                                    }
+                                    harcamaEklenmeTarihi += oneDay
+                                }
+                            }
+                            3 -> {
+                                var harcamaEklenmeTarihi = gelenHarcama.eklenme_zamani
+                                while (harcamaEklenmeTarihi <= gelenHarcama.bitis_tarihi!!){
+                                    if (harcamaEklenmeTarihi + oneWeek <= gelenHarcama.bitis_tarihi!!){
                                         kacGunEklenecek += 1
                                         val eklenecekGelir = yinelenenHarcamaOlustur(gelenHarcama,harcamaEklenmeTarihi,sonEklenenHarcama)
                                         eklenecekHarcamalar.add(eklenecekGelir)
                                     }
+                                    harcamaEklenmeTarihi += oneWeek
                                 }
-                                harcamaEklenmeTarihi += oneDay
+                            }
+                            4 -> {
+                                var harcamaEklenmeTarihi = gelenHarcama.eklenme_zamani
+                                while (harcamaEklenmeTarihi <= gelenHarcama.bitis_tarihi!!){
+                                    if (harcamaEklenmeTarihi + (oneWeek *2 ) <= gelenHarcama.bitis_tarihi!!){
+                                        kacGunEklenecek += 1
+                                        val eklenecekGelir = yinelenenHarcamaOlustur(gelenHarcama,harcamaEklenmeTarihi,sonEklenenHarcama)
+                                        eklenecekHarcamalar.add(eklenecekGelir)
+                                    }
+                                    harcamaEklenmeTarihi += (oneWeek *2 )
+                                }
+                            }
+                            5 -> {
+                                var harcamaEklenmeTarihi = gelenHarcama.eklenme_zamani
+                                while (harcamaEklenmeTarihi <= gelenHarcama.bitis_tarihi!!){
+                                    if (harcamaEklenmeTarihi + oneMounth <= gelenHarcama.bitis_tarihi!!){
+                                        kacGunEklenecek += 1
+                                        val eklenecekGelir = yinelenenHarcamaOlustur(gelenHarcama,harcamaEklenmeTarihi,sonEklenenHarcama)
+                                        eklenecekHarcamalar.add(eklenecekGelir)
+                                    }
+                                    harcamaEklenmeTarihi += oneMounth
+                                }
+                            }
+                            6 -> {
+                                var harcamaEklenmeTarihi = gelenHarcama.eklenme_zamani
+                                while (harcamaEklenmeTarihi <= gelenHarcama.bitis_tarihi!!){
+                                    if (harcamaEklenmeTarihi + oneYear <= gelenHarcama.bitis_tarihi!!){
+                                        kacGunEklenecek += 1
+                                        val eklenecekGelir = yinelenenHarcamaOlustur(gelenHarcama,harcamaEklenmeTarihi,sonEklenenHarcama)
+                                        eklenecekHarcamalar.add(eklenecekGelir)
+                                    }
+                                    harcamaEklenmeTarihi += oneYear
+                                }
                             }
                         }
-                        3 -> {
-                            var harcamaEklenmeTarihi = gelenHarcama.eklenme_zamani
-                            while (harcamaEklenmeTarihi <= gelenHarcama.bitis_tarihi!!){
-                                if (harcamaEklenmeTarihi + oneWeek <= gelenHarcama.bitis_tarihi!!){
-                                    kacGunEklenecek += 1
-                                    val eklenecekGelir = yinelenenHarcamaOlustur(gelenHarcama,harcamaEklenmeTarihi,sonEklenenHarcama)
-                                    eklenecekHarcamalar.add(eklenecekGelir)
-                                }
-                                harcamaEklenmeTarihi += oneWeek
-                            }
-                        }
-                        4 -> {
-                            var harcamaEklenmeTarihi = gelenHarcama.eklenme_zamani
-                            while (harcamaEklenmeTarihi <= gelenHarcama.bitis_tarihi!!){
-                                if (harcamaEklenmeTarihi + (oneWeek *2 ) <= gelenHarcama.bitis_tarihi!!){
-                                    kacGunEklenecek += 1
-                                    val eklenecekGelir = yinelenenHarcamaOlustur(gelenHarcama,harcamaEklenmeTarihi,sonEklenenHarcama)
-                                    eklenecekHarcamalar.add(eklenecekGelir)
-                                }
-                                harcamaEklenmeTarihi += (oneWeek *2 )
-                            }
-                        }
-                        5 -> {
-                            var harcamaEklenmeTarihi = gelenHarcama.eklenme_zamani
-                            while (harcamaEklenmeTarihi <= gelenHarcama.bitis_tarihi!!){
-                                if (harcamaEklenmeTarihi + oneMounth <= gelenHarcama.bitis_tarihi!!){
-                                    kacGunEklenecek += 1
-                                    val eklenecekGelir = yinelenenHarcamaOlustur(gelenHarcama,harcamaEklenmeTarihi,sonEklenenHarcama)
-                                    eklenecekHarcamalar.add(eklenecekGelir)
-                                }
-                                harcamaEklenmeTarihi += oneMounth
-                            }
-                        }
-                        6 -> {
-                            var harcamaEklenmeTarihi = gelenHarcama.eklenme_zamani
-                            while (harcamaEklenmeTarihi <= gelenHarcama.bitis_tarihi!!){
-                                if (harcamaEklenmeTarihi + oneYear <= gelenHarcama.bitis_tarihi!!){
-                                    kacGunEklenecek += 1
-                                    val eklenecekGelir = yinelenenHarcamaOlustur(gelenHarcama,harcamaEklenmeTarihi,sonEklenenHarcama)
-                                    eklenecekHarcamalar.add(eklenecekGelir)
-                                }
-                                harcamaEklenmeTarihi += oneYear
-                            }
+                        Log.e("LOG","Toplam eklenecek gün sayısı $kacGunEklenecek")
+                        eklenecekHarcamalar.forEach {
+                            gelirGiderTakipDatabase.gelirGiderDAO().gelirGiderEkle(it)
                         }
                     }
-                    Log.e("LOG","Toplam eklenecek gün sayısı $kacGunEklenecek")
-                    eklenecekHarcamalar.forEach {
-                        gelirGiderTakipDatabase.gelirGiderDAO().gelirGiderEkle(it)
-                    }
+                    Toast.makeText(requireContext(),"Harcama eklendi", Toast.LENGTH_LONG).show()
+                    temizle()
+                    ozetEkranaGec()
                 }
-                Toast.makeText(requireContext(),"Harcama eklendi", Toast.LENGTH_LONG).show()
-                temizle()
-                findNavController().navigate(R.id.action_harcamaEkle_to_ozet)
             }
+
             it.switchDuzenliMiHarcama.setOnCheckedChangeListener{_, stateBool ->
                 if (stateBool){
                     binding.spinnerYineleHarcama.visibility = View.VISIBLE
@@ -198,9 +198,19 @@ class HarcamaEkle : Fragment() {
                     binding.editTextDateYinelemeBitisHarcama.visibility = View.INVISIBLE
                 }
             }
+
             it.spinnerHarcamaTipi.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
                 override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                    seciliHarcamaTipi = harcamaTipleri[p2]
+                    if (harcamaTipiAdListesi[p2] == requireContext().getString(R.string.yeni_kategori_ekle)) {
+                        seciliHarcamaTipi = null
+                        kategoriEkleEkranaGec()
+                        temizle()
+                    }
+                    else{
+                        seciliHarcamaTipi = harcamaTipleri[p2]
+                    }
+
+
                 }
 
                 override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -221,6 +231,34 @@ class HarcamaEkle : Fragment() {
         }
     }
 
+    private fun kategoriEkleEkranaGec(){
+        val gecisAction = HarcamaEkleDirections.harcamaEkleToKategoriEkle()
+        findNavController().navigate(gecisAction)
+    }
+
+    private fun girdiKontrol() : Boolean {
+        //HATA
+        if (binding.editTextMiktarHarcama.text.isNullOrEmpty()){
+            Toast.makeText(requireContext(),requireContext().getString(R.string.miktar_bos_olamaz),Toast.LENGTH_LONG).show()
+            return false
+        }
+        if (seciliHarcamaTipi == null){
+            Toast.makeText(requireContext(),requireContext().getString(R.string.kategori_sec),Toast.LENGTH_LONG).show()
+            return false
+        }
+
+        //UYARI
+        if (binding.editTextAdHarcama.text.isNullOrEmpty()){
+            Toast.makeText(requireContext(),requireContext().getString(R.string.ad_bos_uyari),Toast.LENGTH_LONG).show()
+        }
+        return true
+
+    }
+
+    private fun ozetEkranaGec(){
+        findNavController().navigate(R.id.action_harcamaEkle_to_ozet)
+    }
+
     private fun yinelenenHarcamaOlustur(gelenHarcama : GelirGider, gelirEklenmeTarihi : Long, sonEklenenHarcama : GelirGider) : GelirGider {
          return GelirGider(
              tip = 3,
@@ -234,6 +272,7 @@ class HarcamaEkle : Fragment() {
              tekrar_tipi = gelenHarcama.tekrar_tipi,
              eklenmis_mi = false,
              harcama_tipi_id = gelenHarcama.harcama_tipi_id,
+             yinelenen_mi = true
         )
     }
 
@@ -242,7 +281,6 @@ class HarcamaEkle : Fragment() {
             if (it != null){
                 harcamaTipleri.add(it)
                 harcamaTipiAdListesi.add(it.ad)
-
             }
         }
     }
@@ -272,12 +310,11 @@ class HarcamaEkle : Fragment() {
             it.editTextAciklamaHarcama.setText("")
             it.editTextMiktarHarcama.setText("")
             it.switchDuzenliMiHarcama.isChecked = false
-
-
         }
     }
 
-    private fun loadSpinner(){
+    private fun kategoriSpinnerYukle(){
+        harcamaTipiAdListesi.add(requireContext().getString(R.string.yeni_kategori_ekle))
         val adapter : ArrayAdapter<*>
         adapter = ArrayAdapter(
             requireActivity(),
@@ -294,15 +331,10 @@ class HarcamaEkle : Fragment() {
             var harcamaAdi = it.editTextAdHarcama.text.toString()
             if (it.editTextAdHarcama.text.isEmpty())
                 harcamaAdi = requireContext().getString(R.string.isimsiz_harcama)
-
             val harcamaTipiId = seciliHarcamaTipi!!.id
-
-
-
             val miktar = it.editTextMiktarHarcama.text.toString().toDouble()
             val aciklama = it.editTextAciklamaHarcama.text.toString()
             val eklenme = System.currentTimeMillis();
-
             val duzenli_mi = it.switchDuzenliMiHarcama.isChecked
             var tekrar_tipi: Int? = null
             var bitis_tarihi : Long? = null
@@ -311,7 +343,6 @@ class HarcamaEkle : Fragment() {
                 tekrar_tipi = binding.spinnerYineleHarcama.selectedItemPosition
                 bitis_tarihi = cal.timeInMillis + 100000
             }
-
             return GelirGider(
                 tip = 1,
                 ad = harcamaAdi,

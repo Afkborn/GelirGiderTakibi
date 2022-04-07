@@ -13,6 +13,11 @@
         <action
             android:id="@+id/action_harcamaEkle_to_ozet"
             app:destination="@id/ozet" />
+        <action
+            android:id="@+id/harcamaEkle_to_kategoriEkle"
+            app:destination="@id/kategoriEkle"
+            app:popUpTo="@id/harcamaEkle"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/ozet"
@@ -46,4 +51,9 @@
             android:name="gelenGelirGider"
             app:argType="com.bilgehankalay.gelirgidertakibi.Model.GelirGider" />
     </fragment>
+    <fragment
+        android:id="@+id/kategoriEkle"
+        android:name="com.bilgehankalay.gelirgidertakibi.fragment.KategoriEkle"
+        android:label="fragment_kategori_ekle"
+        tools:layout="@layout/fragment_kategori_ekle" />
 </navigation>

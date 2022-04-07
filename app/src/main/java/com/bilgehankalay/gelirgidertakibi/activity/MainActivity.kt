@@ -32,8 +32,6 @@ class MainActivity : AppCompatActivity() {
         classTemelHarcamaTipleri = TemelHarcamaTipleri(applicationContext)
         harcamaList = gelirGiderTakipDatabase.harcamaTipiDAO().tumHarcamaTipi()
 
-
-
         if (harcamaList.isEmpty() || harcamaList.size != classTemelHarcamaTipleri.temelHarcamaTipleri.size){
             temelTipYukle()
         }

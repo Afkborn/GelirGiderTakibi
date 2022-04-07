@@ -55,10 +55,12 @@
     <string name="eklenme_zamani">Eklenme Zamanı</string>
     <string name="yinele">Yinele</string>
     <string name="tarih_sec">Tarih Seç</string>
-
+    <string name="miktar_bos_olamaz">Miktar Boş Olamaz</string>
+    <string name="ad_bos_uyari">Ad bilgisi boş</string>
     <string name="gg_aa_yyyy_text">GG/AA/YYYY</string>
     <string name="date_format">dd/MM/yyyy</string>
-
+    <string name="yeni_kategori_ekle">Yeni Kategori Ekle</string>
+    <string name="kategori_sec">Kategori Seçiniz</string>
     <string-array name="tekrar_secenekler">
         <item>Her Gün</item>
         <item>Hafta içi</item>
@@ -68,5 +70,7 @@
         <item>Her Ay</item>
         <item>Her Yıl</item>
     </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

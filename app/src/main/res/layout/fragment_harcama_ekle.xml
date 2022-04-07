@@ -11,22 +11,23 @@
         android:id="@+id/button_tarihSecHarcama"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="0dp"
         android:text="@string/tarih_sec"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextDate_yinelemeBitisHarcama" />
+        app:layout_constraintStart_toEndOf="@+id/editTextDate_yinelemeBitisHarcama"
+        app:layout_constraintTop_toBottomOf="@+id/textView_yineleBitisHarcama" />
 
     <EditText
         android:id="@+id/editTextDate_yinelemeBitisHarcama"
-        android:layout_width="wrap_content"
+        android:layout_width="170dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
         android:ems="10"
+        android:enabled="false"
         android:hint="@string/gg_aa_yyyy_text"
         android:inputType="date"
         android:minHeight="48dp"
         android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView_yineleBitisHarcama" />
 
@@ -34,10 +35,10 @@
         android:id="@+id/textView_yineleBitisHarcama"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
         android:layout_marginTop="16dp"
         android:text="Yineleme Bitiş Tarihi"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinner_yineleHarcama" />
 

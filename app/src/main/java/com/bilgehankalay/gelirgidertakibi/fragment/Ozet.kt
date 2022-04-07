@@ -183,40 +183,44 @@ class Ozet : Fragment(), SearchDialogFragment.SeciliItemListener {
 
     private fun kontrolYinelenenGelirGiderList(){
         yinelenenGelirGiderList.forEach {
-            if (it != null){
                 if (System.currentTimeMillis() >= it.eklenme_zamani && it.eklenmis_mi == false){
-                    Log.e("LOG","Eklenecek eleman var")
                     val anaGelirGider = gelirGiderTakipDatabase.gelirGiderDAO().idGelirGider(it.ana_harcama!!)
-                    anaGelirGider!!.eklenme_zamani = it.eklenme_zamani
-                    it.eklenmis_mi = true
-                    val eklenecekGelirGider = GelirGider(
-                        tip = anaGelirGider.tip,
-                        ad = anaGelirGider.ad,
-                        miktar = anaGelirGider.miktar,
-                        aciklama = anaGelirGider.aciklama,
-                        eklenme_zamani = it.eklenme_zamani,
-                        duzenli_mi = anaGelirGider.duzenli_mi,
-                        tekrar_tipi = anaGelirGider.tekrar_tipi,
-                        yinelenen_mi = true)
+                    if (anaGelirGider != null){
+                        anaGelirGider!!.eklenme_zamani = it.eklenme_zamani
+                        it.eklenmis_mi = true
+                        val eklenecekGelirGider = GelirGider(
+                            tip = anaGelirGider.tip,
+                            ad = anaGelirGider.ad,
+                            miktar = anaGelirGider.miktar,
+                            aciklama = anaGelirGider.aciklama,
+                            eklenme_zamani = it.eklenme_zamani,
+                            duzenli_mi = anaGelirGider.duzenli_mi,
+                            tekrar_tipi = anaGelirGider.tekrar_tipi,
+                            yinelenen_mi = true
+                        )
+                        if (anaGelirGider.tip == 0){
+                            eklenecekGelirGider.aktif_pasif = anaGelirGider.aktif_pasif
+                        }
+                        else if (anaGelirGider.tip == 1){
+                            eklenecekGelirGider.harcama_tipi_id = anaGelirGider.harcama_tipi_id
+                        }
 
-                    if (anaGelirGider.tip == 0){
-                        //gelir
-                        eklenecekGelirGider.aktif_pasif = anaGelirGider.aktif_pasif
+                        gelirGiderTakipDatabase.gelirGiderDAO().gelirGiderEkle(eklenecekGelirGider)
+                        gelirGiderTakipDatabase.gelirGiderDAO().gelirGiderGuncelle(it)
+
+                        //TODO EN BAŞA EKLEME, LİSTEYE EKLE ZAMANA GÖRE LİSTELE
+
+                        gelirGiderList.add(0,eklenecekGelirGider)
+                    }
+                    else{
+                        // Yinelenen harcaması var fakat ana harcaması yok. yinelenen haqrcaması sil.
+                        Log.e("Yinelenen Gelir Gider", it.toString())
+                        Log.e("Ana Gelir Gider",anaGelirGider.toString())
+                        gelirGiderTakipDatabase.gelirGiderDAO().gelirGiderSil(it)
 
                     }
-                    else if (anaGelirGider.tip == 1){
-                        //gider
-                        eklenecekGelirGider.harcama_tipi_id = anaGelirGider.harcama_tipi_id
                     }
-
-                    gelirGiderTakipDatabase.gelirGiderDAO().gelirGiderEkle(eklenecekGelirGider)
-                    gelirGiderTakipDatabase.gelirGiderDAO().gelirGiderGuncelle(it)
-                    gelirGiderList.add(0,eklenecekGelirGider)
-
-
                 }
-            }
-        }
     }
 
     private fun recyclerViewSetSwap(){
@@ -229,7 +233,6 @@ class Ozet : Fragment(), SearchDialogFragment.SeciliItemListener {
                 return false
             }
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                //kaydırıldığında çalışır
                 if (filtreVarMi){
                     val kaydirilanGelirGider = filtreliGelirGiderList[viewHolder.adapterPosition]
                     gelirGiderSilWithDialog(kaydirilanGelirGider)
