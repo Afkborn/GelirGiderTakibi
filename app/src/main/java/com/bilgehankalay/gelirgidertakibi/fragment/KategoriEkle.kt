@@ -11,7 +11,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,8 +18,10 @@ import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.bilgehankalay.gelirgidertakibi.Database.GelirGiderTakipDatabase
 import com.bilgehankalay.gelirgidertakibi.Model.HarcamaTipi
+import com.bilgehankalay.gelirgidertakibi.R
 import com.bilgehankalay.gelirgidertakibi.databinding.FragmentKategoriEkleBinding
 import java.io.*
 import java.util.*
@@ -32,6 +33,9 @@ class KategoriEkle : Fragment() {
     private lateinit var secilenBitmap : Bitmap
 
     private lateinit var gelirGiderTakipDatabase: GelirGiderTakipDatabase
+
+    private var kategoriId: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         gelirGiderTakipDatabase = GelirGiderTakipDatabase.getirGelirGiderTakipDatabase(requireContext())!!
@@ -71,9 +75,9 @@ class KategoriEkle : Fragment() {
                     try {
                         val fileLoc = saveImageToExternalStorage(secilenBitmap)
                         olusanHarcamaTipi = HarcamaTipi(ad= ad, has_drawable = true, drawable_name =fileLoc.toString(), is_custom = true)
-                        gelirGiderTakipDatabase.harcamaTipiDAO().harcamaTipiEkle(olusanHarcamaTipi)
-                        Toast.makeText(requireContext(),"BAŞARILI",Toast.LENGTH_LONG).show()
-
+                        harcamaEkle(olusanHarcamaTipi)
+                        Toast.makeText(requireContext(),requireContext().getString(R.string.kategori_basarili_eklendi),Toast.LENGTH_LONG).show()
+                        harcamaEkleGit()
                     }
                     catch (e: IOException) {
                         e.printStackTrace()
@@ -82,12 +86,32 @@ class KategoriEkle : Fragment() {
                 }
                 else{
                     olusanHarcamaTipi = HarcamaTipi(ad= ad, has_drawable = false, is_custom = true)
-                    gelirGiderTakipDatabase.harcamaTipiDAO().harcamaTipiEkle(olusanHarcamaTipi)
+                    harcamaEkle(olusanHarcamaTipi)
+                    Toast.makeText(requireContext(),requireContext().getString(R.string.kategori_basarili_eklendi),Toast.LENGTH_LONG).show()
+                    harcamaEkleGit()
                 }
 
 
             }
         }
+    }
+    private fun harcamaEkle(olusanHarcamaTipi : HarcamaTipi){
+        if (gelirGiderTakipDatabase.harcamaTipiDAO().harcamaTipiGetirAd(olusanHarcamaTipi.ad) == null){
+            gelirGiderTakipDatabase.harcamaTipiDAO().harcamaTipiEkle(olusanHarcamaTipi)
+            val databaseHarcamaTipi = gelirGiderTakipDatabase.harcamaTipiDAO().harcamaTipiGetirAd(olusanHarcamaTipi.ad)
+            if (databaseHarcamaTipi != null){
+                kategoriId = databaseHarcamaTipi.id
+            }
+        }
+        else{
+            Toast.makeText(requireContext(),requireContext().getString(R.string.kategori_ad_mevcut_hata),Toast.LENGTH_LONG).show()
+        }
+
+    }
+
+    private fun harcamaEkleGit(){
+        val gecisAction = KategoriEkleDirections.kategoriEkleToHarcamaEkle(kategoriId)
+        findNavController().navigate(gecisAction)
     }
 
     private fun saveImageToExternalStorage(bitmap:Bitmap):Uri{

@@ -4,4 +4,5 @@
     <item android:id="@+id/harcamaEkle" android:icon="@drawable/up_arrow" android:title="@string/harcama_ekle"/>
     <item android:id="@+id/gelirEkle" android:icon="@drawable/down_arrow" android:title="@string/gelir_ekle"/>
     <item android:id="@+id/rapor" android:icon="@drawable/rapor" android:title="@string/rapor" />
+    <item android:id="@+id/menu"  android:icon="@drawable/menu" android:title="@string/menu"/>
 </menu>

@@ -18,6 +18,10 @@
             app:destination="@id/kategoriEkle"
             app:popUpTo="@id/harcamaEkle"
             app:popUpToInclusive="true" />
+        <argument
+            android:name="kategori_id"
+            app:argType="integer"
+            android:defaultValue="0" />
     </fragment>
     <fragment
         android:id="@+id/ozet"
@@ -26,7 +30,8 @@
         tools:layout="@layout/fragment_ozet" >
         <action
             android:id="@+id/ozet_to_gelirGiderDetay"
-            app:destination="@id/gelirGiderDetay" />
+            app:destination="@id/gelirGiderDetay"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/gelirEkle"
@@ -50,10 +55,22 @@
         <argument
             android:name="gelenGelirGider"
             app:argType="com.bilgehankalay.gelirgidertakibi.Model.GelirGider" />
+        <action
+            android:id="@+id/gelirGiderDetay_to_ozet"
+            app:destination="@id/ozet" />
     </fragment>
     <fragment
         android:id="@+id/kategoriEkle"
         android:name="com.bilgehankalay.gelirgidertakibi.fragment.KategoriEkle"
         android:label="fragment_kategori_ekle"
-        tools:layout="@layout/fragment_kategori_ekle" />
+        tools:layout="@layout/fragment_kategori_ekle" >
+        <action
+            android:id="@+id/kategoriEkle_to_harcamaEkle"
+            app:destination="@id/harcamaEkle" />
+    </fragment>
+    <fragment
+        android:id="@+id/menu"
+        android:name="com.bilgehankalay.gelirgidertakibi.fragment.Menu"
+        android:label="fragment_menu"
+        tools:layout="@layout/fragment_menu" />
 </navigation>

@@ -61,6 +61,23 @@
     <string name="date_format">dd/MM/yyyy</string>
     <string name="yeni_kategori_ekle">Yeni Kategori Ekle</string>
     <string name="kategori_sec">Kategori Seçiniz</string>
+    <string name="simge">Simge</string>
+    <string name="kategori_olustur">Kategori Oluştur</string>
+    <string name="secili_simge">Seçili Simge</string>
+    <string name="simge_sec">Simge Seç</string>
+    <string name="sec">Seç</string>
+    <string name="menu">Menü</string>
+    <string name="kategori_basarili_eklendi">Kategori başarıyla eklendi</string>
+    <string name="kategori_ad_mevcut_hata">Bu isime sahip bir kategori mevcut</string>
+    <string name="silme_basarili">Silme başarılı!</string>
+    <string name="guncelleme_basarili">Güncelleme başarılı!</string>
+
+
+
+
+
+
+
     <string-array name="tekrar_secenekler">
         <item>Her Gün</item>
         <item>Hafta içi</item>
@@ -70,10 +87,5 @@
         <item>Her Ay</item>
         <item>Her Yıl</item>
     </string-array>
-    <string name="simge">Simge</string>
-    <string name="kategori_olustur">Kategori Oluştur</string>
-    <string name="secili_simge">Seçili Simge</string>
-    <string name="simge_sec">Simge Seç</string>
-    <string name="sec">Seç</string>
 
 </resources>

@@ -12,6 +12,7 @@ import android.widget.DatePicker
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.bilgehankalay.gelirgidertakibi.Database.GelirGiderTakipDatabase
 import com.bilgehankalay.gelirgidertakibi.Model.GelirGider
 import com.bilgehankalay.gelirgidertakibi.Model.HarcamaTipi
@@ -35,6 +36,10 @@ class HarcamaEkle : Fragment() {
     var harcamaTipleri : ArrayList<HarcamaTipi> = arrayListOf()
 
     var seciliHarcamaTipi : HarcamaTipi? = null
+
+    var eklenenKategoriId : Int = 0
+    private val args : HarcamaEkleArgs by navArgs()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         gelirGiderTakipDatabase = GelirGiderTakipDatabase.getirGelirGiderTakipDatabase(requireContext())!!
@@ -61,6 +66,20 @@ class HarcamaEkle : Fragment() {
         kategoriSpinnerYukle()
         tekrarSpinnerYukle()
 
+        eklenenKategoriId = args.kategoriId
+        if (eklenenKategoriId != 0){
+            val gelenHarcamaTipi = gelirGiderTakipDatabase.harcamaTipiDAO().harcamaTipiGetirId(eklenenKategoriId)
+            if (gelenHarcamaTipi != null){
+                var counter = 0
+                harcamaTipiAdListesi.forEach {
+                    if (it == gelenHarcamaTipi.ad){
+                        binding.spinnerHarcamaTipi.setSelection(counter)
+                    }
+                    counter++
+                }
+            }
+        }
+
         val dateSetListener = object : DatePickerDialog.OnDateSetListener {
             override fun onDateSet(view: DatePicker, year: Int, monthOfYear: Int,
                                    dayOfMonth: Int) {
@@ -74,6 +93,9 @@ class HarcamaEkle : Fragment() {
         binding.also {
             it.buttonTemizleHarcama.setOnClickListener {
                 temizle()
+                harcamaTipleriGetir()
+                kategoriSpinnerYukle()
+                tekrarSpinnerYukle()
             }
             it.buttonEkleHarcama.setOnClickListener {
                 if (girdiKontrol()){
@@ -305,6 +327,7 @@ class HarcamaEkle : Fragment() {
     private fun temizle(){
         harcamaTipleri.clear()
         harcamaTipiAdListesi.clear()
+
         binding.also {
             it.editTextAdHarcama.setText("")
             it.editTextAciklamaHarcama.setText("")
