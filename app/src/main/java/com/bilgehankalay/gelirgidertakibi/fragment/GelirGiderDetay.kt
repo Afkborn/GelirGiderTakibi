@@ -25,6 +25,7 @@ class GelirGiderDetay : Fragment() {
     private val args : GelirGiderDetayArgs by navArgs()
     private lateinit var gelenGelirGider : GelirGider
     private lateinit var gelirGiderTakipDatabase : GelirGiderTakipDatabase
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         gelenGelirGider = args.gelenGelirGider
@@ -35,7 +36,6 @@ class GelirGiderDetay : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         binding = FragmentGelirGiderDetayBinding.inflate(inflater,container,false)
         return binding.root
     }
@@ -67,7 +67,6 @@ class GelirGiderDetay : Fragment() {
                 else{
                     it.textViewGelirHarcamaTipi.text = requireContext().getString(R.string.pasif_gelir)
                 }
-
             }
             else{
                 it.textViewGelirGider.text = requireContext().getString(R.string.gider)
@@ -75,22 +74,21 @@ class GelirGiderDetay : Fragment() {
                 val harcamaTipi =  gelirGiderTakipDatabase.harcamaTipiDAO().harcamaTipiGetirId(gelenGelirGider.harcama_tipi_id!!)
                 it.textViewGelirHarcamaTipi.text = harcamaTipi!!.ad
             }
+
             it.editTextAd.setText(gelenGelirGider.ad)
             it.editTextMiktar.setText(gelenGelirGider.miktar.toString())
             it.editTextAciklama.setText(gelenGelirGider.aciklama.toString())
-
             it.textViewEklenmeZamani.text = convertLongToTime(gelenGelirGider.eklenme_zamani)
 
             if(gelenGelirGider.duzenli_mi == true){
                 it.checkBoxDuzenliMi.isChecked = true
                 val tekrar_seceneklerList = resources.getStringArray(R.array.tekrar_secenekler)
                 it.textViewTekrarSuresi.setText(tekrar_seceneklerList[gelenGelirGider.tekrar_tipi!!].toString())
-
-
             }
             else{
                 it.constraintLayoutTekrarSuresi.visibility = View.INVISIBLE
             }
+
         }
 
     }

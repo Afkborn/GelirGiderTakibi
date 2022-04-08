@@ -22,6 +22,9 @@
             android:name="kategori_id"
             app:argType="integer"
             android:defaultValue="0" />
+        <action
+            android:id="@+id/harcamaEkle_to_kategoriler"
+            app:destination="@id/kategoriler" />
     </fragment>
     <fragment
         android:id="@+id/ozet"
@@ -72,5 +75,14 @@
         android:id="@+id/menu"
         android:name="com.bilgehankalay.gelirgidertakibi.fragment.Menu"
         android:label="fragment_menu"
-        tools:layout="@layout/fragment_menu" />
+        tools:layout="@layout/fragment_menu" >
+        <action
+            android:id="@+id/action_menu_to_kategoriler"
+            app:destination="@id/kategoriler" />
+    </fragment>
+    <fragment
+        android:id="@+id/kategoriler"
+        android:name="com.bilgehankalay.gelirgidertakibi.fragment.Kategoriler"
+        android:label="fragment_kategoriler"
+        tools:layout="@layout/fragment_kategoriler" />
 </navigation>

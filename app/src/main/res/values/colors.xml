@@ -21,5 +21,9 @@
     <color name="cyan_200">#80deea</color>
     <color name="cyan_400">#26c6da</color>
     <color name="cyan_700">#0097a7</color>
+    
+    
+    <color name="yellow_700">#fbc02d</color>
+    <color name="indiago_400">#5c6bc0</color>
 
 </resources>

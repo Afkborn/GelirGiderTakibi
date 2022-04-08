@@ -159,4 +159,5 @@
         app:layout_constraintBottom_toTopOf="@+id/spinner_harcamaTipi"
         app:layout_constraintEnd_toEndOf="@+id/spinner_harcamaTipi"
         app:layout_constraintStart_toStartOf="@+id/spinner_harcamaTipi" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

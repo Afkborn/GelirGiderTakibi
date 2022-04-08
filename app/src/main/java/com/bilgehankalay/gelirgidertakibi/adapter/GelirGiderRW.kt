@@ -139,7 +139,6 @@ class GelirGiderRW(private var gelirGiderList : ArrayList<GelirGider>)  : Recycl
                         setImageError(gelirGiderTasarimBinding)
                     }
                 }
-                //drawable yok, harcamaTipi adı kısalt ve baş harflerini yaz
             }
         }
         else{

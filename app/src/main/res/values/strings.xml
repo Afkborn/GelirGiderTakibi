@@ -71,12 +71,8 @@
     <string name="kategori_ad_mevcut_hata">Bu isime sahip bir kategori mevcut</string>
     <string name="silme_basarili">Silme başarılı!</string>
     <string name="guncelleme_basarili">Güncelleme başarılı!</string>
-
-
-
-
-
-
+    <string name="kategori_duzenle">Kategori Düzenle</string>
+    <string name="kategoriler">Kategoriler</string>
 
     <string-array name="tekrar_secenekler">
         <item>Her Gün</item>
@@ -87,5 +83,7 @@
         <item>Her Ay</item>
         <item>Her Yıl</item>
     </string-array>
+
+
 
 </resources>
