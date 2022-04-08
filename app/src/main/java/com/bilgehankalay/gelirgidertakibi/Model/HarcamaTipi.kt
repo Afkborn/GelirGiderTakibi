@@ -15,7 +15,14 @@ data class HarcamaTipi(
     @ColumnInfo(name="ad")
     var ad : String,
 
+    @ColumnInfo(name = "has_drawable")
+    var has_drawable : Boolean,
+
+    @ColumnInfo(name = "is_custom")
+    var is_custom : Boolean,
+
     @ColumnInfo(name = "drawable_name")
-    var drawable_name : String
+    var drawable_name : String? = null,
+
 
 ) : Serializable

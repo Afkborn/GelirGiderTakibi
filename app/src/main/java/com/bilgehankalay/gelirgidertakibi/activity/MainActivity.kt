@@ -2,6 +2,8 @@ package com.bilgehankalay.gelirgidertakibi.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
+import android.util.Log
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.bilgehankalay.gelirgidertakibi.Database.GelirGiderTakipDatabase
@@ -9,6 +11,7 @@ import com.bilgehankalay.gelirgidertakibi.Model.HarcamaTipi
 import com.bilgehankalay.gelirgidertakibi.R
 import com.bilgehankalay.gelirgidertakibi.databinding.ActivityMainBinding
 import com.bilgehankalay.gelirgidertakibi.other.TemelHarcamaTipleri
+import java.io.File
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding : ActivityMainBinding
@@ -25,6 +28,8 @@ class MainActivity : AppCompatActivity() {
 
 
         setContentView(binding.root)
+
+        createDrawableFolder()
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         NavigationUI.setupWithNavController(binding.bottomNavigationView, navHostFragment.navController)
@@ -46,6 +51,13 @@ class MainActivity : AppCompatActivity() {
                     gelirGiderTakipDatabase.harcamaTipiDAO().harcamaTipiEkle(it)
             }
         }
+    }
+
+    private fun createDrawableFolder(){
+        val path = Environment.getDataDirectory()
+        val file = File(path,"/data/com.bilgehankalay.gelirgidertakibi/drawable/")
+        file.mkdir()
+
     }
 
 

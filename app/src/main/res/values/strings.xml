@@ -70,7 +70,10 @@
         <item>Her Ay</item>
         <item>Her Yıl</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="simge">Simge</string>
+    <string name="kategori_olustur">Kategori Oluştur</string>
+    <string name="secili_simge">Seçili Simge</string>
+    <string name="simge_sec">Simge Seç</string>
+    <string name="sec">Seç</string>
 
 </resources>

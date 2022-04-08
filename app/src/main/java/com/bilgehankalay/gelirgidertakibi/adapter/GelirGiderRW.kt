@@ -1,17 +1,19 @@
 package com.bilgehankalay.gelirgidertakibi.adapter
 
 
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.bilgehankalay.gelirgidertakibi.Database.GelirGiderTakipDatabase
 import com.bilgehankalay.gelirgidertakibi.Model.GelirGider
 import com.bilgehankalay.gelirgidertakibi.R
 import com.bilgehankalay.gelirgidertakibi.databinding.GelirGiderCardTasarimBinding
+import java.io.File
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -44,11 +46,12 @@ class GelirGiderRW(private var gelirGiderList : ArrayList<GelirGider>)  : Recycl
                 onItemClick(gelirGider)
             }
             val formatlananMiktar = NumberFormat.getCurrencyInstance(Locale("tr","TR")).format(gelirGider.miktar)
+            //GELİR
             if (gelirGider.tip == 0){
-                //GELİR
+                it.imageViewThumbnail.visibility = View.INVISIBLE
+                it.textViewHarcamaTipiAdi.visibility = View.GONE
                 it.imageViewGelirGiderIco.visibility = View.INVISIBLE
                 it.imageViewHarcamaTipiIco.setImageResource(R.drawable.dollar)
-                it.textViewHarcamaTipiAdi.visibility = View.INVISIBLE
                 it.textViewHarcamaMiktar.text = rw_parent!!.context.getString(R.string.arti_bakiye,formatlananMiktar) // Resources.getSystem().getString(R.string.arti_bakiye,"1")
                 it.progressBarHarcamaYuzde.max = toplamGelir.toInt()
                 val harcamaYuzde =  gelirGider.miktar / (toplamGelir / 100 )
@@ -70,29 +73,20 @@ class GelirGiderRW(private var gelirGiderList : ArrayList<GelirGider>)  : Recycl
                 val yuvarlananSayi = String.format("%.2f", harcamaYuzde)
                 it.textViewHarcamaYuzde.text  = rw_parent!!.context.getString(R.string.harcama_yuzde,yuvarlananSayi)
                 it.textViewHarcamaMiktar.setTextColor(Color.parseColor("#ff3300"))
-                if (gelirGider.harcama_tipi_id != null){
-                    val harcamaTipi =  gelirGiderTakipDatabase.harcamaTipiDAO().harcamaTipiGetirId(gelirGider.harcama_tipi_id!!)
-                    if (harcamaTipi != null){
-                        it.textViewHarcamaTipiAdi.text = harcamaTipi.ad
-                        val imgUri =
-                            Uri.parse("android.resource://com.bilgehankalay.gelirgidertakibi/drawable/" + harcamaTipi.drawable_name)
-                        it.imageViewHarcamaTipiIco.setImageURI(imgUri)
-                    }
+
+                if (gelirGider.harcama_tipi_id != null) {
+                    setHarcamaTipi(it, gelirGider.harcama_tipi_id!!)
                 }
                 else{
-                    it.imageViewHarcamaTipiIco.setImageResource(R.drawable.error)
+                    setImageError(it)
                 }
                 it.progressBarHarcamaYuzde.progress = gelirGider.miktar.toInt()
                 it.textViewHarcamaAdi.text = gelirGider.ad
 
             }
-            else if (gelirGider.tip == 2){
-                // TEKRAR
-
-            }
 
             //long to date
-            val sdf = SimpleDateFormat("dd/MM/yyyy")
+            val sdf = SimpleDateFormat("dd/MM/yy")
             val date = Date(gelirGider.eklenme_zamani )
             it.textViewHarcamaTarih.text = sdf.format(date)
 
@@ -103,6 +97,57 @@ class GelirGiderRW(private var gelirGiderList : ArrayList<GelirGider>)  : Recycl
 
 
         }
+    }
+
+    private fun setHarcamaTipi(gelirGiderTasarimBinding : GelirGiderCardTasarimBinding, harcama_tipi_id : Int){
+        val harcamaTipi =  gelirGiderTakipDatabase.harcamaTipiDAO().harcamaTipiGetirId(harcama_tipi_id)
+        if (harcamaTipi != null){
+            gelirGiderTasarimBinding.textViewHarcamaTipiAdi.text = harcamaTipi.ad
+            if (harcamaTipi.has_drawable){
+                gelirGiderTasarimBinding.imageViewThumbnail.visibility = View.INVISIBLE
+                gelirGiderTasarimBinding.imageViewHarcamaTipiIco.visibility = View.VISIBLE
+                if (!harcamaTipi.is_custom){
+                    //drawable var temel harcama tipi
+                    val imgUri =
+                        Uri.parse("android.resource://com.bilgehankalay.gelirgidertakibi/drawable/" + harcamaTipi.drawable_name)
+                    gelirGiderTasarimBinding.imageViewHarcamaTipiIco.setImageURI(imgUri)
+                }
+                else{
+                    val uri : Uri = Uri.parse(harcamaTipi.drawable_name)
+                    gelirGiderTasarimBinding.imageViewHarcamaTipiIco.setImageURI(uri)
+                }
+
+            }
+            else{
+                gelirGiderTasarimBinding.imageViewThumbnail.visibility = View.VISIBLE
+                gelirGiderTasarimBinding.imageViewHarcamaTipiIco.visibility = View.INVISIBLE
+                val harcamaAdi = harcamaTipi.ad
+                harcamaAdi.split(" ").let {
+                    if (it.size == 1){
+                        //get first char
+                        val kisaltma = harcamaAdi.get(0).toString()
+                        gelirGiderTasarimBinding.imageViewThumbnail.setText(kisaltma)
+                    }
+                    else if (it.size > 1){
+                        // get 1 2
+                        val kisaltma = "${harcamaAdi.get(0)}${harcamaAdi.get(1)}"
+                        gelirGiderTasarimBinding.imageViewThumbnail.setText(kisaltma)
+                    }
+                    else{
+                        gelirGiderTasarimBinding.imageViewThumbnail.visibility = View.INVISIBLE
+                        gelirGiderTasarimBinding.imageViewHarcamaTipiIco.visibility = View.VISIBLE
+                        setImageError(gelirGiderTasarimBinding)
+                    }
+                }
+                //drawable yok, harcamaTipi adı kısalt ve baş harflerini yaz
+            }
+        }
+        else{
+            setImageError(gelirGiderTasarimBinding)
+        }
+    }
+    private fun setImageError(gelirGiderTasarimBinding : GelirGiderCardTasarimBinding){
+        gelirGiderTasarimBinding.imageViewHarcamaTipiIco.setImageResource(R.drawable.error)
     }
 
     override fun getItemCount(): Int {
