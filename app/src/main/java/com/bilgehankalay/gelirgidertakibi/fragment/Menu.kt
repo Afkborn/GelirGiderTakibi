@@ -30,8 +30,10 @@ class Menu : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.buttonKategoriler.setOnClickListener {
-            val gecisAction = MenuDirections.actionMenuToKategoriler()
-            findNavController().navigate(gecisAction)
+            findNavController().navigate(MenuDirections.actionMenuToKategoriler())
+        }
+        binding.buttonBahsis.setOnClickListener {
+            findNavController().navigate(MenuDirections.actionMenuToBahsis())
         }
     }
 

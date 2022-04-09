@@ -254,7 +254,7 @@ class HarcamaEkle : Fragment() {
     }
 
     private fun kategoriEkleEkranaGec(){
-        val gecisAction = HarcamaEkleDirections.harcamaEkleToKategoriEkle()
+        val gecisAction = HarcamaEkleDirections.harcamaEkleToKategoriEkle(gelinenEkran = 0)
         findNavController().navigate(gecisAction)
     }
 

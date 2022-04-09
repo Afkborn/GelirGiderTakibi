@@ -75,6 +75,19 @@
     <string name="kategoriler">Kategoriler</string>
     <string name="isim_degistir">İsim Değiştir</string>
     <string name="yeni_isim">Yeni İsim</string>
+    <string name="bahsis">Bahşiş</string>
+    <string name="hesap_bolus">Hesapları Bölüş</string>
+    <string name="hesap_miktar">Hesap Tutarı</string>
+    <string name="kisi_sayisi">Kişi Sayısı</string>
+    <string name="yuvarla">Yuvarla</string>
+
+    <string name="hesap_miktar_toplam">Hesap miktarı %1$s</string>
+    <string name="toplam_hesap">Toplam Hesap %1$s</string>
+    <string name="bahsis_miktar">Bahşiş miktarı %1$s</string>
+    <string name="kisi_basi_miktar">Kişi başı miktar %1$s</string>
+    <string name="yuzde_sifir">%0</string>
+    <string name="yuzde_otuzBes">%35</string>
+
     <string-array name="tekrar_secenekler">
         <item>Her Gün</item>
         <item>Hafta içi</item>

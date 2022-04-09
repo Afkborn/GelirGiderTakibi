@@ -55,7 +55,7 @@ class Kategoriler : Fragment() {
         }
     }
     private fun goKategoriEkle(){
-        val gecisAction = KategorilerDirections.kategorilerToKategoriEkle()
+        val gecisAction = KategorilerDirections.kategorilerToKategoriEkle(gelinenEkran = 1)
         findNavController().navigate(gecisAction)
     }
 

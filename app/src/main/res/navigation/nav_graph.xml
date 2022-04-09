@@ -70,6 +70,12 @@
         <action
             android:id="@+id/kategoriEkle_to_harcamaEkle"
             app:destination="@id/harcamaEkle" />
+        <action
+            android:id="@+id/kategoriEkle_to_kategoriler"
+            app:destination="@id/kategoriler" />
+        <argument
+            android:name="gelinenEkran"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/menu"
@@ -79,6 +85,9 @@
         <action
             android:id="@+id/action_menu_to_kategoriler"
             app:destination="@id/kategoriler" />
+        <action
+            android:id="@+id/action_menu_to_bahsis"
+            app:destination="@id/bahsis" />
     </fragment>
     <fragment
         android:id="@+id/kategoriler"
@@ -87,6 +96,17 @@
         tools:layout="@layout/fragment_kategoriler" >
         <action
             android:id="@+id/kategoriler_to_kategoriEkle"
-            app:destination="@id/kategoriEkle" />
+            app:destination="@id/kategoriEkle"
+            app:popUpTo="@id/kategoriler"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/bahsis"
+        android:name="com.bilgehankalay.gelirgidertakibi.fragment.Bahsis"
+        android:label="fragment_bahsis"
+        tools:layout="@layout/fragment_bahsis" >
+        <action
+            android:id="@+id/bahsis_to_ozet"
+            app:destination="@id/ozet" />
     </fragment>
 </navigation>
