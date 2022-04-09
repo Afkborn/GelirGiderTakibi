@@ -1,21 +1,30 @@
 package com.bilgehankalay.gelirgidertakibi.adapter
 
+import android.app.AlertDialog
+import android.content.Context
+import android.content.DialogInterface
 import android.net.Uri
+import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.recyclerview.widget.RecyclerView
+import com.bilgehankalay.gelirgidertakibi.Database.GelirGiderTakipDatabase
 import com.bilgehankalay.gelirgidertakibi.Model.HarcamaTipi
 import com.bilgehankalay.gelirgidertakibi.R
 import com.bilgehankalay.gelirgidertakibi.databinding.KategoriCardTasarimBinding
 
 class KategorilerRW (private var harcamaTipleriList : ArrayList<HarcamaTipi>) : RecyclerView.Adapter<KategorilerRW.HarcamaTipiCardTasarım>() {
-
+    private lateinit var context : Context
+    private lateinit var gelirGiderTakipDatabase : GelirGiderTakipDatabase
     class HarcamaTipiCardTasarım(val harcamaTipiCardTasarim : KategoriCardTasarimBinding) : RecyclerView.ViewHolder(harcamaTipiCardTasarim.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HarcamaTipiCardTasarım {
-        val layoutInflater = LayoutInflater.from(parent.context)
+        context = parent.context
+        val layoutInflater = LayoutInflater.from(context)
+        gelirGiderTakipDatabase = GelirGiderTakipDatabase.getirGelirGiderTakipDatabase(context)!!
         val harcamaTipiCardTasarim = KategoriCardTasarimBinding.inflate(layoutInflater,parent,false)
         return HarcamaTipiCardTasarım(harcamaTipiCardTasarim)
 
@@ -26,8 +35,7 @@ class KategorilerRW (private var harcamaTipleriList : ArrayList<HarcamaTipi>) : 
         holder.harcamaTipiCardTasarim.let {
             if (harcamaTipi.is_custom){
                 it.textViewKategoriAdi.setOnClickListener {
-                    //TODO İSME TIKLANDI İSİM DEĞİŞTİR
-                    Log.e("LOG","isim güncelle")
+                    showDialogGetText(context,harcamaTipi)
                 }
                 if (harcamaTipi.has_drawable){
                     it.imageViewKategoriIco.setOnClickListener {
@@ -45,6 +53,9 @@ class KategorilerRW (private var harcamaTipleriList : ArrayList<HarcamaTipi>) : 
 
                 it.imageViewLockOrDelete.setOnClickListener {
                     // TODO SİL
+                    gelirGiderTakipDatabase.harcamaTipiDAO().harcamaTipiSil(harcamaTipi)
+                    harcamaTipleriList.remove(harcamaTipi)
+                    notifyDataSetChanged()
                 }
             }
 
@@ -79,10 +90,12 @@ class KategorilerRW (private var harcamaTipleriList : ArrayList<HarcamaTipi>) : 
                 harcamaAdi.split(" ").let { itList ->
                     if (itList.size == 1){
                         val kisaltma = harcamaAdi.get(0).toString()
+                        it.imageViewThumbnailKategori.textSize = 70F
                         it.imageViewThumbnailKategori.setText(kisaltma)
                     }
                     else if (itList.size > 1){
                         val kisaltma = "${harcamaAdi.get(0)}${harcamaAdi.get(1)}"
+                        it.imageViewThumbnailKategori.textSize = 63F
                         it.imageViewThumbnailKategori.setText(kisaltma)
                     }
                     else{
@@ -94,6 +107,25 @@ class KategorilerRW (private var harcamaTipleriList : ArrayList<HarcamaTipi>) : 
             }
 
         }
+    }
+    fun showDialogGetText(context:Context, harcamaTipi : HarcamaTipi){
+        val builder: AlertDialog.Builder = android.app.AlertDialog.Builder(context)
+        builder.setTitle(context.getString(R.string.isim_degistir))
+        val input = EditText(context)
+        input.setHint(context.getString(R.string.yeni_isim))
+        input.inputType = InputType.TYPE_CLASS_TEXT
+        builder.setView(input)
+        builder.setPositiveButton(context.getString(R.string.tamam), DialogInterface.OnClickListener { dialog, which ->
+            val m_Text = input.text.toString()
+            if (!m_Text.isNullOrEmpty()){
+                harcamaTipi.ad = m_Text
+                gelirGiderTakipDatabase.harcamaTipiDAO().harcamaTipiGuncelle(harcamaTipi)
+                notifyDataSetChanged()
+            }
+
+        })
+        builder.setNegativeButton(context.getString(R.string.iptal), DialogInterface.OnClickListener { dialog, which -> dialog.cancel() })
+        builder.show()
     }
 
     override fun getItemCount(): Int {

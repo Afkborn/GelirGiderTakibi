@@ -73,7 +73,8 @@
     <string name="guncelleme_basarili">Güncelleme başarılı!</string>
     <string name="kategori_duzenle">Kategori Düzenle</string>
     <string name="kategoriler">Kategoriler</string>
-
+    <string name="isim_degistir">İsim Değiştir</string>
+    <string name="yeni_isim">Yeni İsim</string>
     <string-array name="tekrar_secenekler">
         <item>Her Gün</item>
         <item>Hafta içi</item>

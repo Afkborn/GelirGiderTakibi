@@ -84,5 +84,9 @@
         android:id="@+id/kategoriler"
         android:name="com.bilgehankalay.gelirgidertakibi.fragment.Kategoriler"
         android:label="fragment_kategoriler"
-        tools:layout="@layout/fragment_kategoriler" />
+        tools:layout="@layout/fragment_kategoriler" >
+        <action
+            android:id="@+id/kategoriler_to_kategoriEkle"
+            app:destination="@id/kategoriEkle" />
+    </fragment>
 </navigation>

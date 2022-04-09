@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bilgehankalay.gelirgidertakibi.Database.GelirGiderTakipDatabase
 import com.bilgehankalay.gelirgidertakibi.Model.HarcamaTipi
@@ -40,6 +41,10 @@ class Kategoriler : Fragment() {
         binding.recyclerViewKategoriler.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
         binding.recyclerViewKategoriler.adapter = kategorilerRw
         binding.recyclerViewKategoriler.setHasFixedSize(true)
+
+        binding.buttonEkle.setOnClickListener {
+            goKategoriEkle()
+        }
     }
     private fun harcamaTipleriGetir(){
         harcamaTipleri.clear()
@@ -48,6 +53,10 @@ class Kategoriler : Fragment() {
                 harcamaTipleri.add(it)
             }
         }
+    }
+    private fun goKategoriEkle(){
+        val gecisAction = KategorilerDirections.kategorilerToKategoriEkle()
+        findNavController().navigate(gecisAction)
     }
 
 }
