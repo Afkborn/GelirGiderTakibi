@@ -42,5 +42,6 @@
             android:textAlignment="center"
             android:textSize="20sp"
             android:textStyle="bold" />
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,7 +1,6 @@
 package com.bilgehankalay.gelirgidertakibi.fragment
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,8 +12,7 @@ import com.bilgehankalay.gelirgidertakibi.Database.GelirGiderTakipDatabase
 import com.bilgehankalay.gelirgidertakibi.Model.GelirGider
 import com.bilgehankalay.gelirgidertakibi.R
 import com.bilgehankalay.gelirgidertakibi.databinding.FragmentBahsisBinding
-import java.text.NumberFormat
-import java.util.*
+
 
 
 class Bahsis : Fragment() {
@@ -38,7 +36,7 @@ class Bahsis : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentBahsisBinding.inflate(inflater,container,false)
         return binding.root
 
@@ -94,10 +92,11 @@ class Bahsis : Fragment() {
         })
 
         binding.buttonEkle.setOnClickListener {
-            val eklenme = System.currentTimeMillis();
+            val eklenme = System.currentTimeMillis()
             val harcamaTipi = gelirGiderTakipDatabase.harcamaTipiDAO().harcamaTipiGetirAd(requireContext().getString(R.string.yemek))
             if (harcamaTipi != null){
-                val harcama = GelirGider(tip = 1, ad = "Hesap", miktar = kisiBasiMiktar, aciklama = "ACIKLAMA YAZ", duzenli_mi = false, eklenme_zamani = eklenme, harcama_tipi_id = harcamaTipi.id)
+                val aciklama =  requireContext().getString(R.string.bahsis_aciklama,kisiSayisi.toString())
+                val harcama = GelirGider(tip = 1, ad = "Hesap", miktar = kisiBasiMiktar, aciklama = aciklama, duzenli_mi = false, eklenme_zamani = eklenme, harcama_tipi_id = harcamaTipi.id)
                 gelirGiderTakipDatabase.gelirGiderDAO().gelirGiderEkle(harcama)
                 goOzet()
             }

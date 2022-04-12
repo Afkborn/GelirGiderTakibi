@@ -17,6 +17,7 @@ class TemelHarcamaTipleri(applicationContext: Context) : ArrayList<HarcamaTipi?>
         temelHarcamaTipleri.add(HarcamaTipi(ad = applicationContext.getString(R.string.okul), drawable_name = "school", has_drawable = true, is_custom = false))
         temelHarcamaTipleri.add(HarcamaTipi(ad = applicationContext.getString(R.string.cocuk), drawable_name = "child_care", has_drawable = true, is_custom = false))
         temelHarcamaTipleri.add(HarcamaTipi(ad = applicationContext.getString(R.string.seyahat), drawable_name = "seyahat", has_drawable = true, is_custom = false))
+        temelHarcamaTipleri.add(HarcamaTipi(ad = applicationContext.getString(R.string.saglik), drawable_name = "health", has_drawable = true, is_custom = false))
 
     }
 }
