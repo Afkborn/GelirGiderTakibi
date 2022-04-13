@@ -138,7 +138,7 @@ class Ozet : Fragment(), SearchDialogFragment.SeciliItemListener {
 
     private fun ozetBilgisiYaz(){
 
-        val (pairToplamGelir, pairtoplamGider) = gelirGiderRWAdapter.toplamGelirGiderHesapla()
+        val (pairToplamGelir, pairtoplamGider) = gelirGiderRWAdapter.yuzdeHesapla()
         toplamGelir = pairToplamGelir
         toplamGider = pairtoplamGider
 

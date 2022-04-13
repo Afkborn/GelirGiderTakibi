@@ -87,7 +87,7 @@
     <string name="kisi_basi_miktar">Kişi başı miktar %1$s</string>
     <string name="yuzde_sifir">%0</string>
     <string name="yuzde_otuzBes">%35</string>
-
+    <string name="gelirGider">Gelir/Gider</string>
     <string name="bahsis_aciklama">%1$s kişi yemek harcaması.</string>
 
     <string-array name="tekrar_secenekler">

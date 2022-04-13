@@ -153,7 +153,7 @@ class GelirGiderRW(private var gelirGiderList : ArrayList<GelirGider>)  : Recycl
         return gelirGiderList.size
     }
 
-    fun toplamGelirGiderHesapla() : Pair<Double,Double>{
+    fun yuzdeHesapla() : Pair<Double,Double>{
         toplamGider = 0.0
         toplamGelir = 0.0
         gelirGiderList.forEach {

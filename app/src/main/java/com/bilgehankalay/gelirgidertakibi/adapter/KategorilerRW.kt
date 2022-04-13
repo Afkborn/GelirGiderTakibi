@@ -19,6 +19,7 @@ import com.bilgehankalay.gelirgidertakibi.databinding.KategoriCardTasarimBinding
 class KategorilerRW (private var harcamaTipleriList : ArrayList<HarcamaTipi>) : RecyclerView.Adapter<KategorilerRW.HarcamaTipiCardTasarım>() {
     private lateinit var context : Context
     private lateinit var gelirGiderTakipDatabase : GelirGiderTakipDatabase
+
     class HarcamaTipiCardTasarım(val harcamaTipiCardTasarim : KategoriCardTasarimBinding) : RecyclerView.ViewHolder(harcamaTipiCardTasarim.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HarcamaTipiCardTasarım {
