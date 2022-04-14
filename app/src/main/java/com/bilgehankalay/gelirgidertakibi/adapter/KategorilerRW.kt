@@ -19,10 +19,18 @@ import com.bilgehankalay.gelirgidertakibi.databinding.KategoriCardTasarimBinding
 class KategorilerRW (private var harcamaTipleriList : ArrayList<HarcamaTipi>, var raporMu : Boolean) : RecyclerView.Adapter<KategorilerRW.HarcamaTipiCardTasarım>() {
     private lateinit var context : Context
     private lateinit var gelirGiderTakipDatabase : GelirGiderTakipDatabase
+
+    var toplamHarcamaMiktar = 0.0
+
+    var gelirStr = ""
     class HarcamaTipiCardTasarım(val harcamaTipiCardTasarim : KategoriCardTasarimBinding) : RecyclerView.ViewHolder(harcamaTipiCardTasarim.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HarcamaTipiCardTasarım {
         context = parent.context
+        gelirStr = context.getString(R.string.gelir)
+        if (raporMu){
+            setYuzde()
+        }
         val layoutInflater = LayoutInflater.from(context)
         gelirGiderTakipDatabase = GelirGiderTakipDatabase.getirGelirGiderTakipDatabase(context)!!
         val harcamaTipiCardTasarim = KategoriCardTasarimBinding.inflate(layoutInflater,parent,false)
@@ -30,67 +38,58 @@ class KategorilerRW (private var harcamaTipleriList : ArrayList<HarcamaTipi>, va
 
     }
 
+    private fun setYuzde() {
+        harcamaTipleriList.forEach {
+            if (it.kategoriToplamHarcamaMiktar != null){
+                toplamHarcamaMiktar += it.kategoriToplamHarcamaMiktar!!
+            }
+        }
+    }
+
+
+
     override fun onBindViewHolder(holder: HarcamaTipiCardTasarım, position: Int) {
         val harcamaTipi = harcamaTipleriList[position]
 
         holder.harcamaTipiCardTasarim.let {
             // LOAD UI
             it.textViewKategoriAdi.text = harcamaTipi.ad
-
+            if (raporMu){
+                it.progressBarRaporYuzde.visibility = View.VISIBLE
+                it.textViewRaporYuzde.visibility = View.VISIBLE
+                it.imageViewLockOrDelete.visibility  = View.INVISIBLE
+            }
+            else{
+                it.progressBarRaporYuzde.visibility = View.INVISIBLE
+                it.textViewRaporYuzde.visibility = View.INVISIBLE
+                it.imageViewLockOrDelete.visibility  = View.VISIBLE
+            }
             if (harcamaTipi.has_drawable){
                 it.imageViewThumbnailKategori.visibility = View.INVISIBLE
                 it.imageViewKategoriIco.visibility = View.VISIBLE
 
                 if (!harcamaTipi.is_custom){
-                    if (!raporMu){
-                        it.imageViewLockOrDelete.setImageResource(R.drawable.lock)
-                        it.progressBarRaporYuzde.visibility = View.INVISIBLE
-                        it.textViewRaporYuzde.visibility = View.INVISIBLE
-                    }
-                    else{
-                        it.imageViewLockOrDelete.visibility  = View.INVISIBLE
-                        it.progressBarRaporYuzde.visibility = View.VISIBLE
-                        it.textViewRaporYuzde.visibility = View.VISIBLE
-                    }
-
+                    it.imageViewLockOrDelete.setImageResource(R.drawable.lock)
                     val imgUri =
                         Uri.parse("android.resource://com.bilgehankalay.gelirgidertakibi/drawable/" + harcamaTipi.drawable_name)
                     it.imageViewKategoriIco.setImageURI(imgUri)
                 }
-
                 else{
-                    if(!raporMu){
-                        it.imageViewLockOrDelete.setImageResource(R.drawable.delete)
-                        it.progressBarRaporYuzde.visibility = View.INVISIBLE
-                        it.textViewRaporYuzde.visibility = View.INVISIBLE
-                    }
-                    else{
-                        it.imageViewLockOrDelete.visibility = View.INVISIBLE
-                        it.progressBarRaporYuzde.visibility = View.VISIBLE
-                        it.textViewRaporYuzde.visibility = View.VISIBLE
-                    }
-
+                    it.imageViewLockOrDelete.setImageResource(R.drawable.delete)
                     val uri : Uri = Uri.parse(harcamaTipi.drawable_name)
                     it.imageViewKategoriIco.setImageURI(uri)
                 }
             }
+
             else{
                 it.imageViewThumbnailKategori.visibility = View.VISIBLE
                 it.imageViewKategoriIco.visibility = View.INVISIBLE
-                if (!raporMu){
-                    it.progressBarRaporYuzde.visibility = View.INVISIBLE
-                    it.textViewRaporYuzde.visibility = View.INVISIBLE
-                    if (!harcamaTipi.is_custom){
-                        it.imageViewLockOrDelete.setImageResource(R.drawable.lock)
-                    }
-                    else{
-                        it.imageViewLockOrDelete.setImageResource(R.drawable.delete)
-                    }
+
+                if (!harcamaTipi.is_custom){
+                    it.imageViewLockOrDelete.setImageResource(R.drawable.lock)
                 }
                 else{
-                    it.imageViewLockOrDelete.visibility = View.INVISIBLE
-                    it.progressBarRaporYuzde.visibility = View.VISIBLE
-                    it.textViewRaporYuzde.visibility = View.VISIBLE
+                    it.imageViewLockOrDelete.setImageResource(R.drawable.delete)
                 }
                 val harcamaAdi = harcamaTipi.ad
                 harcamaAdi.split(" ").let { itList ->
@@ -111,6 +110,7 @@ class KategorilerRW (private var harcamaTipleriList : ArrayList<HarcamaTipi>, va
                     }
                 }
             }
+
         }
 
         if (!raporMu){
@@ -132,7 +132,6 @@ class KategorilerRW (private var harcamaTipleriList : ArrayList<HarcamaTipi>, va
                         }
 
                     }
-
                     it.imageViewLockOrDelete.setOnClickListener {
                         // TODO SİL
                         gelirGiderTakipDatabase.harcamaTipiDAO().harcamaTipiSil(harcamaTipi)
@@ -142,6 +141,15 @@ class KategorilerRW (private var harcamaTipleriList : ArrayList<HarcamaTipi>, va
                 }
             }
         }
+        else{
+            val harcamaYuzde = harcamaTipi.kategoriToplamHarcamaMiktar?.div((toplamHarcamaMiktar / 100 ))
+            val yuvarlananSayi = String.format("%.2f", harcamaYuzde)
+            holder.harcamaTipiCardTasarim.progressBarRaporYuzde.max = toplamHarcamaMiktar.toInt()
+            holder.harcamaTipiCardTasarim.progressBarRaporYuzde.progress = harcamaTipi.kategoriToplamHarcamaMiktar!!.toInt()
+            holder.harcamaTipiCardTasarim.textViewRaporYuzde.text  = context.getString(R.string.harcama_yuzde,yuvarlananSayi)
+        }
+
+
 
     }
 
@@ -164,6 +172,8 @@ class KategorilerRW (private var harcamaTipleriList : ArrayList<HarcamaTipi>, va
         builder.setNegativeButton(context.getString(R.string.iptal), DialogInterface.OnClickListener { dialog, which -> dialog.cancel() })
         builder.show()
     }
+
+
 
     override fun getItemCount(): Int {
         return harcamaTipleriList.size

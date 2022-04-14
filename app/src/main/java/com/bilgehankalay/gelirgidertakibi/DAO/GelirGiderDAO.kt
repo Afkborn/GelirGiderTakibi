@@ -41,7 +41,7 @@ interface GelirGiderDAO {
     @Query("SELECT eklenme_zamani FROM gelir_gider")
     fun tumGelirGiderTarih() : List<Long?>
 
-    @Query("SELECT * FROM gelir_gider WHERE eklenme_zamani BETWEEN :startUnix AND :stopUnix")
+    @Query("SELECT * FROM gelir_gider WHERE tip = 1 AND eklenme_zamani  BETWEEN :startUnix AND :stopUnix ORDER BY eklenme_zamani DESC")
     fun tumGelirGiderAy(startUnix : Long , stopUnix : Long) : List<GelirGider?>
 
 }

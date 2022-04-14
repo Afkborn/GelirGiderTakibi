@@ -37,6 +37,7 @@ class Rapor : Fragment() {
     private var harcamalar : ArrayList<GelirGider> = arrayListOf()
     private var kategoriler : ArrayList<HarcamaTipi> = arrayListOf()
 
+    var toplamGelirMiktar = 0.0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         gelirGiderTakipDatabase = GelirGiderTakipDatabase.getirGelirGiderTakipDatabase(requireContext())!!
@@ -131,18 +132,30 @@ class Rapor : Fragment() {
         harcamalar.clear()
         kategoriler.clear()
         val (pairStart, pairStop) = dateToUnix(seciliTarih!!)
+
         gelirGiderTakipDatabase.gelirGiderDAO().tumGelirGiderAy(pairStart,pairStop).forEach {
             if (it != null){
                 harcamalar.add(it)
                 if (it.tip == 0){
                     //Gelir
+                    toplamGelirMiktar += it.miktar
                 }
                 else if (it.tip == 1){
                     //Gider
                     if (it.harcama_tipi_id != null){
                         val kategoriHarcama = gelirGiderTakipDatabase.harcamaTipiDAO().harcamaTipiGetirId(it.harcama_tipi_id!!)
                         if (kategoriHarcama != null){
-                            kategoriler.add(kategoriHarcama)
+                            if (!kategoriler.contains(kategoriHarcama)){
+                                kategoriHarcama.kategoriToplamHarcamaMiktar = it.miktar
+                                kategoriler.add(kategoriHarcama)
+                            }
+                            else{
+                                val kategorilerId = kategoriler.indexOf(kategoriHarcama)
+                                kategoriler[kategorilerId].kategoriToplamHarcamaMiktar = kategoriler[kategorilerId].kategoriToplamHarcamaMiktar?.plus(
+                                    it.miktar
+                                )
+                            }
+
                         }
                     }
                 }
@@ -153,9 +166,6 @@ class Rapor : Fragment() {
 
         loadRecyclerViewGelirGider()
         loadRecyclerViewKategoriler()
-        //TODO KATEGORİLER İCİN CARD TASARIMI YAP
-        //TODO KATEGORİLER İÇİN RECYCLER VİEW YAZ
-        //TODO KATEGORİLER BAĞLA
 
     }
 

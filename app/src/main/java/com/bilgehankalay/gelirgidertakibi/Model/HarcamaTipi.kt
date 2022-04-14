@@ -3,6 +3,7 @@ package com.bilgehankalay.gelirgidertakibi.Model
 import android.net.Uri
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import java.io.Serializable
 
@@ -25,4 +26,8 @@ data class HarcamaTipi(
     var drawable_name : String? = null,
 
 
-) : Serializable
+
+) : Serializable {
+    @Ignore
+    var kategoriToplamHarcamaMiktar : Double? = null
+}
