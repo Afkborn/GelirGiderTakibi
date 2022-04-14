@@ -37,7 +37,7 @@ class Kategoriler : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         harcamaTipleriGetir()
-        val kategorilerRw = KategorilerRW(harcamaTipleri)
+        val kategorilerRw = KategorilerRW(harcamaTipleri, false)
         binding.recyclerViewKategoriler.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
         binding.recyclerViewKategoriler.adapter = kategorilerRw
         binding.recyclerViewKategoriler.setHasFixedSize(true)

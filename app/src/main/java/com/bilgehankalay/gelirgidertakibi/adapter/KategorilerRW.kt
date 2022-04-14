@@ -16,10 +16,9 @@ import com.bilgehankalay.gelirgidertakibi.Model.HarcamaTipi
 import com.bilgehankalay.gelirgidertakibi.R
 import com.bilgehankalay.gelirgidertakibi.databinding.KategoriCardTasarimBinding
 
-class KategorilerRW (private var harcamaTipleriList : ArrayList<HarcamaTipi>) : RecyclerView.Adapter<KategorilerRW.HarcamaTipiCardTasarım>() {
+class KategorilerRW (private var harcamaTipleriList : ArrayList<HarcamaTipi>, var raporMu : Boolean) : RecyclerView.Adapter<KategorilerRW.HarcamaTipiCardTasarım>() {
     private lateinit var context : Context
     private lateinit var gelirGiderTakipDatabase : GelirGiderTakipDatabase
-
     class HarcamaTipiCardTasarım(val harcamaTipiCardTasarim : KategoriCardTasarimBinding) : RecyclerView.ViewHolder(harcamaTipiCardTasarim.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HarcamaTipiCardTasarım {
@@ -33,47 +32,44 @@ class KategorilerRW (private var harcamaTipleriList : ArrayList<HarcamaTipi>) : 
 
     override fun onBindViewHolder(holder: HarcamaTipiCardTasarım, position: Int) {
         val harcamaTipi = harcamaTipleriList[position]
+
         holder.harcamaTipiCardTasarim.let {
-            if (harcamaTipi.is_custom){
-                it.textViewKategoriAdi.setOnClickListener {
-                    showDialogGetText(context,harcamaTipi)
-                }
-                if (harcamaTipi.has_drawable){
-                    it.imageViewKategoriIco.setOnClickListener {
-                        // TODO RESİM VARDI TIKLANDI RESİM DEĞİŞTİR
-                        Log.e("LOG","resmi var güncelle")
-                    }
-                }
-                else{
-                    it.imageViewThumbnailKategori.setOnClickListener {
-                        // TODO RESMİ YOKTU THUMBNAİL TIKLANDI RESİM KOY
-                        Log.e("LOG","resmi yok thumnbail")
-                    }
-
-                }
-
-                it.imageViewLockOrDelete.setOnClickListener {
-                    // TODO SİL
-                    gelirGiderTakipDatabase.harcamaTipiDAO().harcamaTipiSil(harcamaTipi)
-                    harcamaTipleriList.remove(harcamaTipi)
-                    notifyDataSetChanged()
-                }
-            }
-
             // LOAD UI
             it.textViewKategoriAdi.text = harcamaTipi.ad
+
             if (harcamaTipi.has_drawable){
                 it.imageViewThumbnailKategori.visibility = View.INVISIBLE
                 it.imageViewKategoriIco.visibility = View.VISIBLE
 
                 if (!harcamaTipi.is_custom){
-                    it.imageViewLockOrDelete.setImageResource(R.drawable.lock)
+                    if (!raporMu){
+                        it.imageViewLockOrDelete.setImageResource(R.drawable.lock)
+                        it.progressBarRaporYuzde.visibility = View.INVISIBLE
+                        it.textViewRaporYuzde.visibility = View.INVISIBLE
+                    }
+                    else{
+                        it.imageViewLockOrDelete.visibility  = View.INVISIBLE
+                        it.progressBarRaporYuzde.visibility = View.VISIBLE
+                        it.textViewRaporYuzde.visibility = View.VISIBLE
+                    }
+
                     val imgUri =
                         Uri.parse("android.resource://com.bilgehankalay.gelirgidertakibi/drawable/" + harcamaTipi.drawable_name)
                     it.imageViewKategoriIco.setImageURI(imgUri)
                 }
+
                 else{
-                    it.imageViewLockOrDelete.setImageResource(R.drawable.delete)
+                    if(!raporMu){
+                        it.imageViewLockOrDelete.setImageResource(R.drawable.delete)
+                        it.progressBarRaporYuzde.visibility = View.INVISIBLE
+                        it.textViewRaporYuzde.visibility = View.INVISIBLE
+                    }
+                    else{
+                        it.imageViewLockOrDelete.visibility = View.INVISIBLE
+                        it.progressBarRaporYuzde.visibility = View.VISIBLE
+                        it.textViewRaporYuzde.visibility = View.VISIBLE
+                    }
+
                     val uri : Uri = Uri.parse(harcamaTipi.drawable_name)
                     it.imageViewKategoriIco.setImageURI(uri)
                 }
@@ -81,11 +77,20 @@ class KategorilerRW (private var harcamaTipleriList : ArrayList<HarcamaTipi>) : 
             else{
                 it.imageViewThumbnailKategori.visibility = View.VISIBLE
                 it.imageViewKategoriIco.visibility = View.INVISIBLE
-                if (!harcamaTipi.is_custom){
-                    it.imageViewLockOrDelete.setImageResource(R.drawable.lock)
+                if (!raporMu){
+                    it.progressBarRaporYuzde.visibility = View.INVISIBLE
+                    it.textViewRaporYuzde.visibility = View.INVISIBLE
+                    if (!harcamaTipi.is_custom){
+                        it.imageViewLockOrDelete.setImageResource(R.drawable.lock)
+                    }
+                    else{
+                        it.imageViewLockOrDelete.setImageResource(R.drawable.delete)
+                    }
                 }
                 else{
-                    it.imageViewLockOrDelete.setImageResource(R.drawable.delete)
+                    it.imageViewLockOrDelete.visibility = View.INVISIBLE
+                    it.progressBarRaporYuzde.visibility = View.VISIBLE
+                    it.textViewRaporYuzde.visibility = View.VISIBLE
                 }
                 val harcamaAdi = harcamaTipi.ad
                 harcamaAdi.split(" ").let { itList ->
@@ -106,9 +111,40 @@ class KategorilerRW (private var harcamaTipleriList : ArrayList<HarcamaTipi>) : 
                     }
                 }
             }
-
         }
+
+        if (!raporMu){
+            holder.harcamaTipiCardTasarim.let {
+                if (harcamaTipi.is_custom){
+                    it.textViewKategoriAdi.setOnClickListener {
+                        showDialogGetText(context,harcamaTipi)
+                    }
+                    if (harcamaTipi.has_drawable){
+                        it.imageViewKategoriIco.setOnClickListener {
+                            // TODO RESİM VARDI TIKLANDI RESİM DEĞİŞTİR
+                            Log.e("LOG","resmi var güncelle")
+                        }
+                    }
+                    else{
+                        it.imageViewThumbnailKategori.setOnClickListener {
+                            // TODO RESMİ YOKTU THUMBNAİL TIKLANDI RESİM KOY
+                            Log.e("LOG","resmi yok thumnbail")
+                        }
+
+                    }
+
+                    it.imageViewLockOrDelete.setOnClickListener {
+                        // TODO SİL
+                        gelirGiderTakipDatabase.harcamaTipiDAO().harcamaTipiSil(harcamaTipi)
+                        harcamaTipleriList.remove(harcamaTipi)
+                        notifyDataSetChanged()
+                    }
+                }
+            }
+        }
+
     }
+
     fun showDialogGetText(context:Context, harcamaTipi : HarcamaTipi){
         val builder: AlertDialog.Builder = android.app.AlertDialog.Builder(context)
         builder.setTitle(context.getString(R.string.isim_degistir))

@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bilgehankalay.gelirgidertakibi.Database.GelirGiderTakipDatabase
 import com.bilgehankalay.gelirgidertakibi.Model.GelirGider
+import com.bilgehankalay.gelirgidertakibi.Model.HarcamaTipi
 import com.bilgehankalay.gelirgidertakibi.adapter.GelirGiderRW
 import com.bilgehankalay.gelirgidertakibi.adapter.KategorilerRW
 import com.bilgehankalay.gelirgidertakibi.databinding.FragmentRaporBinding
@@ -26,14 +27,15 @@ class Rapor : Fragment() {
     private var tarihlerListe : List<Long?> = arrayListOf()
     private var tarihlerAdListesi  : ArrayList<String> = arrayListOf()
 
-    private var harcamalar : ArrayList<GelirGider> = arrayListOf()
-
     private var seciliTarih : String? = null
 
 
     private lateinit var gelirGiderRaporRWAdapter : GelirGiderRW
+    private lateinit var kategorilerRaporRWAdapter : KategorilerRW
 
 
+    private var harcamalar : ArrayList<GelirGider> = arrayListOf()
+    private var kategoriler : ArrayList<HarcamaTipi> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -127,13 +129,30 @@ class Rapor : Fragment() {
 
     private fun getHarcama(){
         harcamalar.clear()
+        kategoriler.clear()
         val (pairStart, pairStop) = dateToUnix(seciliTarih!!)
         gelirGiderTakipDatabase.gelirGiderDAO().tumGelirGiderAy(pairStart,pairStop).forEach {
             if (it != null){
                 harcamalar.add(it)
+                if (it.tip == 0){
+                    //Gelir
+                }
+                else if (it.tip == 1){
+                    //Gider
+                    if (it.harcama_tipi_id != null){
+                        val kategoriHarcama = gelirGiderTakipDatabase.harcamaTipiDAO().harcamaTipiGetirId(it.harcama_tipi_id!!)
+                        if (kategoriHarcama != null){
+                            kategoriler.add(kategoriHarcama)
+                        }
+                    }
+                }
+
+
             }
         }
+
         loadRecyclerViewGelirGider()
+        loadRecyclerViewKategoriler()
         //TODO KATEGORİLER İCİN CARD TASARIMI YAP
         //TODO KATEGORİLER İÇİN RECYCLER VİEW YAZ
         //TODO KATEGORİLER BAĞLA
@@ -147,6 +166,15 @@ class Rapor : Fragment() {
             LinearLayoutManager.VERTICAL,false)
         binding.recyclerViewGelirGiderRapor.adapter = gelirGiderRaporRWAdapter
         binding.recyclerViewGelirGiderRapor.setHasFixedSize(true)
+    }
+
+    private fun loadRecyclerViewKategoriler(){
+        kategorilerRaporRWAdapter = KategorilerRW(kategoriler,true)
+        binding.recyclerViewKategoriRapor.layoutManager = LinearLayoutManager(requireContext(),
+        LinearLayoutManager.VERTICAL,false)
+        binding.recyclerViewKategoriRapor.adapter = kategorilerRaporRWAdapter
+        binding.recyclerViewKategoriRapor.setHasFixedSize(true)
+
     }
 
     private fun loadTabLayoutListener(){
