@@ -130,7 +130,7 @@ class KategoriEkle : Fragment() {
 
     private fun saveImageToExternalStorage(bitmap:Bitmap):Uri{
         val path = Environment.getDataDirectory()
-        val file = File(path,"/data/com.bilgehankalay.gelirgidertakibi/drawable/${UUID.randomUUID()}.png")
+        val file = File(path,"/data/com.bilgehankalay.gelirgidertakibi/drawable/${UUID.randomUUID()}.png") //TODO
         try {
             val stream: OutputStream = FileOutputStream(file)
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)

@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
-import com.bilgehankalay.gelirgidertakibi.R
 import com.bilgehankalay.gelirgidertakibi.databinding.FragmentMenuBinding
 
 

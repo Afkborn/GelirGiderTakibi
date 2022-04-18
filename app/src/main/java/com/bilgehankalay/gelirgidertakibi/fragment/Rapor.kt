@@ -15,7 +15,6 @@ import com.bilgehankalay.gelirgidertakibi.Model.HarcamaTipi
 import com.bilgehankalay.gelirgidertakibi.adapter.LegendRW
 import com.bilgehankalay.gelirgidertakibi.databinding.FragmentRaporBinding
 import com.github.mikephil.charting.animation.Easing
-import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
@@ -70,7 +69,6 @@ class Rapor : Fragment() {
         tarihlerAdListesi.clear()
         tarihlerListe = gelirGiderTakipDatabase.gelirGiderDAO().tumGelirGiderTarih()
         val yearDate = SimpleDateFormat("MM/yyyy")
-
         tarihlerListe.forEach {
             if (it != null) {
                 val monthYear = yearDate.format(Date(it))
@@ -79,8 +77,6 @@ class Rapor : Fragment() {
                 }
             }
         }
-
-
     }
 
     private fun spinnerYukle(){
@@ -120,7 +116,6 @@ class Rapor : Fragment() {
         cal.clear(Calendar.SECOND)
         cal.clear(Calendar.MILLISECOND)
         cal[Calendar.DAY_OF_MONTH] = 1
-
         startOfMonth = cal.timeInMillis
         cal.add(Calendar.MONTH, 1)
         val finishOfMonth = cal.timeInMillis
@@ -131,7 +126,6 @@ class Rapor : Fragment() {
         harcamalar.clear()
         kategoriler.clear()
         val (pairStart, pairStop) = dateToUnix(seciliTarih!!)
-
         gelirGiderTakipDatabase.gelirGiderDAO().tumGelirGiderAy(pairStart,pairStop).forEach {
             if (it != null){
                 harcamalar.add(it)
@@ -172,27 +166,22 @@ class Rapor : Fragment() {
 
             //hollow pie chart
             it.pieChart.isDrawHoleEnabled = false
-            it.pieChart.setTouchEnabled(false)
+            it.pieChart.setTouchEnabled(true)
 
             it.pieChart.setDrawEntryLabels(false)
 
             //adding padding
             it.pieChart.setUsePercentValues(true)
             it.pieChart.isRotationEnabled = false
-
             it.pieChart.legend.isEnabled = false
             /*
             it.pieChart.legend.orientation = Legend.LegendOrientation.HORIZONTAL
             it.pieChart.legend.isWordWrapEnabled = false
-
              */
         }
 
     }
     private fun loadChart(){
-
-        var toplamHarcama = 0.0
-
         val dataEntries = ArrayList<PieEntry>()
         val colors: ArrayList<Int> = ArrayList()
         if (kategoriler.size == 0){
@@ -204,7 +193,7 @@ class Rapor : Fragment() {
 
         kategoriler.forEach {
             if (it.kategoriToplamHarcamaMiktar!= null){
-                toplamHarcama += it.kategoriToplamHarcamaMiktar!!
+
                 dataEntries.add(PieEntry(it.kategoriToplamHarcamaMiktar!!.toFloat(),it.ad))
             }
             val rnd = Random()
@@ -212,15 +201,12 @@ class Rapor : Fragment() {
             colors.add(color)
             it.chartColor = color
         }
-        kategoriler.forEach {
-            it.yuzde = it.kategoriToplamHarcamaMiktar!! / (toplamHarcama / 100)
-        }
+
 
 
         binding.let {
             val month_date = SimpleDateFormat("MMMM YYYY")
             val month_name = month_date.format(startOfMonth)
-
             it.pieChart.description.text = ""
             binding.pieChart.centerText = month_name
             binding.pieChart.setCenterTextSize(20.0f)
@@ -233,6 +219,7 @@ class Rapor : Fragment() {
 
         // In Percentage
         data.setValueFormatter(PercentFormatter())
+
         dataSet.sliceSpace = 5f
         dataSet.colors = colors
 

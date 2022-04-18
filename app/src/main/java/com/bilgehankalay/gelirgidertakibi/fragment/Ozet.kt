@@ -211,8 +211,6 @@ class Ozet : Fragment(), SearchDialogFragment.SeciliItemListener {
                         gelirGiderTakipDatabase.gelirGiderDAO().gelirGiderEkle(eklenecekGelirGider)
                         gelirGiderTakipDatabase.gelirGiderDAO().gelirGiderGuncelle(it)
 
-                        //TODO EN BAŞA EKLEME, LİSTEYE EKLE ZAMANA GÖRE LİSTELE
-
                         gelirGiderList.add(0,eklenecekGelirGider)
                     }
                     else{

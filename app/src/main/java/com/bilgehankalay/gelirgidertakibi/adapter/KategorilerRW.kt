@@ -58,7 +58,7 @@ class KategorilerRW (private var harcamaTipleriList : ArrayList<HarcamaTipi>, va
                 if (!harcamaTipi.is_custom){
                     it.imageViewLockOrDelete.setImageResource(R.drawable.lock)
                     val imgUri =
-                        Uri.parse("android.resource://com.bilgehankalay.gelirgidertakibi/drawable/" + harcamaTipi.drawable_name)
+                        Uri.parse("android.resource://com.bilgehankalay.gelirgidertakibi/drawable/" + harcamaTipi.drawable_name) //TODO
                     it.imageViewKategoriIco.setImageURI(imgUri)
                 }
                 else{
@@ -107,19 +107,16 @@ class KategorilerRW (private var harcamaTipleriList : ArrayList<HarcamaTipi>, va
                     }
                     if (harcamaTipi.has_drawable){
                         it.imageViewKategoriIco.setOnClickListener {
-                            // TODO RESİM VARDI TIKLANDI RESİM DEĞİŞTİR
                             Log.e("LOG","resmi var güncelle")
                         }
                     }
                     else{
                         it.imageViewThumbnailKategori.setOnClickListener {
-                            // TODO RESMİ YOKTU THUMBNAİL TIKLANDI RESİM KOY
                             Log.e("LOG","resmi yok thumnbail")
                         }
 
                     }
                     it.imageViewLockOrDelete.setOnClickListener {
-                        // TODO SİL
                         gelirGiderTakipDatabase.harcamaTipiDAO().harcamaTipiSil(harcamaTipi)
                         harcamaTipleriList.remove(harcamaTipi)
                         notifyDataSetChanged()

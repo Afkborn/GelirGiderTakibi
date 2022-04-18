@@ -1,10 +1,8 @@
 package com.bilgehankalay.gelirgidertakibi.adapter
 
 
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +11,6 @@ import com.bilgehankalay.gelirgidertakibi.Database.GelirGiderTakipDatabase
 import com.bilgehankalay.gelirgidertakibi.Model.GelirGider
 import com.bilgehankalay.gelirgidertakibi.R
 import com.bilgehankalay.gelirgidertakibi.databinding.GelirGiderCardTasarimBinding
-import java.io.File
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -55,7 +52,7 @@ class GelirGiderRW(private var gelirGiderList : ArrayList<GelirGider>)  : Recycl
                 it.textViewHarcamaTipiAdi.visibility = View.GONE
                 it.imageViewGelirGiderIco.visibility = View.INVISIBLE
                 it.imageViewHarcamaTipiIco.setImageResource(R.drawable.dollar)
-                it.textViewHarcamaMiktar.text = rw_parent!!.context.getString(R.string.arti_bakiye,formatlananMiktar) // Resources.getSystem().getString(R.string.arti_bakiye,"1")
+                it.textViewHarcamaMiktar.text = rw_parent!!.context.getString(R.string.arti_bakiye,formatlananMiktar)
                 it.progressBarHarcamaYuzde.max = toplamGelir.toInt()
                 val harcamaYuzde =  gelirGider.miktar / (toplamGelir / 100 )
                 val yuvarlananSayi = String.format("%.2f", harcamaYuzde)
@@ -112,7 +109,7 @@ class GelirGiderRW(private var gelirGiderList : ArrayList<GelirGider>)  : Recycl
                 if (!harcamaTipi.is_custom){
                     //drawable var temel harcama tipi
                     val imgUri =
-                        Uri.parse("android.resource://com.bilgehankalay.gelirgidertakibi/drawable/" + harcamaTipi.drawable_name)
+                        Uri.parse("android.resource://com.bilgehankalay.gelirgidertakibi/drawable/" + harcamaTipi.drawable_name) //TODO
                     gelirGiderTasarimBinding.imageViewHarcamaTipiIco.setImageURI(imgUri)
                 }
                 else{

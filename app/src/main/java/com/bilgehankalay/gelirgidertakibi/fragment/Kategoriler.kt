@@ -9,7 +9,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bilgehankalay.gelirgidertakibi.Database.GelirGiderTakipDatabase
 import com.bilgehankalay.gelirgidertakibi.Model.HarcamaTipi
-import com.bilgehankalay.gelirgidertakibi.R
 import com.bilgehankalay.gelirgidertakibi.adapter.KategorilerRW
 import com.bilgehankalay.gelirgidertakibi.databinding.FragmentKategorilerBinding
 

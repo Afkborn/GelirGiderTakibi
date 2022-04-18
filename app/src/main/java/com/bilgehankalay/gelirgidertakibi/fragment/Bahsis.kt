@@ -72,23 +72,13 @@ class Bahsis : Fragment() {
 
         }
 
-
-
         binding.seekBarBahsisYuzde.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
                 bahsisYuzdeSeekBar = p1
                 hesapla()
-
             }
-
-            override fun onStartTrackingTouch(p0: SeekBar?) {
-
-            }
-
-            override fun onStopTrackingTouch(p0: SeekBar?) {
-
-            }
-
+            override fun onStartTrackingTouch(p0: SeekBar?) {}
+            override fun onStopTrackingTouch(p0: SeekBar?) {}
         })
 
         binding.buttonEkle.setOnClickListener {

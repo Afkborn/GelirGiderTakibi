@@ -1,8 +1,6 @@
 package com.bilgehankalay.gelirgidertakibi.fragment
 
-import android.app.AlertDialog
 import android.app.DatePickerDialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -23,12 +21,12 @@ import java.util.*
 
 class GelirEkle : Fragment() {
     private lateinit var binding : FragmentGelirEkleBinding
-
     private lateinit var gelirGiderTakipDatabase: GelirGiderTakipDatabase
     val oneDay = 86400000
     val oneWeek = oneDay * 7
     val oneMounth = oneWeek * 4
     val oneYear = oneMounth * 12
+
     var cal = Calendar.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {

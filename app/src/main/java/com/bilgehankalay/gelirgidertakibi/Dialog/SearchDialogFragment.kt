@@ -16,7 +16,6 @@ class SearchDialogFragment(itemsArrayList : ArrayList<String>, private val secil
         fun seciliFiltre(seciliItem : ArrayList<String>)
     }
 
-
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         itemsLoad()
 
@@ -24,7 +23,6 @@ class SearchDialogFragment(itemsArrayList : ArrayList<String>, private val secil
             val selectedItems = ArrayList<Int>()
             val builder = AlertDialog.Builder(it)
             builder.setTitle(R.string.aciklama)
-
                 .setMultiChoiceItems(items, null,
                     DialogInterface.OnMultiChoiceClickListener { dialog, which, isChecked ->
                         if (isChecked) {
@@ -33,7 +31,6 @@ class SearchDialogFragment(itemsArrayList : ArrayList<String>, private val secil
                             selectedItems.remove(Integer.valueOf(which))
                         }
                     })
-
 
                 .setPositiveButton(R.string.filtrele,
                     DialogInterface.OnClickListener { dialog, id ->
@@ -44,27 +41,21 @@ class SearchDialogFragment(itemsArrayList : ArrayList<String>, private val secil
                         seciliItemListener.seciliFiltre(selectedItemStr)
                     }
                 )
-
                 .setNegativeButton(R.string.iptal,
                     DialogInterface.OnClickListener { dialog, id ->
                     }
                 )
-
             builder.create()
         } ?: throw IllegalStateException("Activity cannot be null")
     }
     fun itemsLoad(){
         charSequences.clear()
-
-        charSequences.add(requireContext().getString(R.string.duzenli_islem)) // düzenli işlem
-        charSequences.add(requireContext().getString(R.string.gelirlerim)) // gelirlerim
-        charSequences.add(requireContext().getString(R.string.giderlerim)) // gelirlerim
-
+        charSequences.add(requireContext().getString(R.string.duzenli_islem))
+        charSequences.add(requireContext().getString(R.string.gelirlerim))
+        charSequences.add(requireContext().getString(R.string.giderlerim))
         itemsArrayList.forEach {
             charSequences.add(it)
         }
-
-
         items = charSequences.toTypedArray()
 
     }

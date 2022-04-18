@@ -3,7 +3,6 @@ package com.bilgehankalay.gelirgidertakibi.activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
-import android.util.Log
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.bilgehankalay.gelirgidertakibi.Database.GelirGiderTakipDatabase
@@ -53,7 +52,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun createDrawableFolder(){
         val path = Environment.getDataDirectory()
-        val file = File(path,"/data/com.bilgehankalay.gelirgidertakibi/drawable/")
+        val file = File(path,"/data/com.bilgehankalay.gelirgidertakibi/drawable/") //TODO
         file.mkdir()
 
     }
