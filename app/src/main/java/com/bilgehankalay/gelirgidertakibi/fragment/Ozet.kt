@@ -142,9 +142,12 @@ class Ozet : Fragment(), SearchDialogFragment.SeciliItemListener {
         toplamGelir = pairToplamGelir
         toplamGider = pairtoplamGider
 
-        val formatlananGelir = NumberFormat.getCurrencyInstance(Locale("tr","TR")).format(toplamGelir)
-        val formatlananGider = NumberFormat.getCurrencyInstance(Locale("tr","TR")).format(toplamGider)
-        val formatlananNet = NumberFormat.getCurrencyInstance(Locale("tr","TR")).format(toplamGelir - toplamGider)
+        val lang = requireContext().getString(R.string.lang)
+        val country = requireContext().getString(R.string.country)
+
+        val formatlananGelir = NumberFormat.getCurrencyInstance(Locale(lang,country)).format(toplamGelir)
+        val formatlananGider = NumberFormat.getCurrencyInstance(Locale(lang,country)).format(toplamGider)
+        val formatlananNet = NumberFormat.getCurrencyInstance(Locale(lang,country)).format(toplamGelir - toplamGider)
         binding.textViewGelir.text = formatlananGelir
         binding.textViewGider.text = formatlananGider
         binding.textViewNet.text = formatlananNet

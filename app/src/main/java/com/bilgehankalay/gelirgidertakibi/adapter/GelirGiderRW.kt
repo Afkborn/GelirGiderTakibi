@@ -45,7 +45,10 @@ class GelirGiderRW(private var gelirGiderList : ArrayList<GelirGider>)  : Recycl
             it.root.setOnClickListener {
                 onItemClick(gelirGider)
             }
-            val formatlananMiktar = NumberFormat.getCurrencyInstance(Locale("tr","TR")).format(gelirGider.miktar)
+
+            val lang = rw_parent!!.context.getString(R.string.lang)
+            val country = rw_parent!!.context.getString(R.string.country)
+            val formatlananMiktar = NumberFormat.getCurrencyInstance(Locale(lang,country)).format(gelirGider.miktar)
             //GELİR
             if (gelirGider.tip == 0){
                 it.imageViewThumbnail.visibility = View.INVISIBLE

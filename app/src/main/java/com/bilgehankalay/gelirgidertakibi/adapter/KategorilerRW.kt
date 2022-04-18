@@ -22,15 +22,12 @@ class KategorilerRW (private var harcamaTipleriList : ArrayList<HarcamaTipi>, va
 
     var toplamHarcamaMiktar = 0.0
 
-    var gelirStr = ""
     class HarcamaTipiCardTasarım(val harcamaTipiCardTasarim : KategoriCardTasarimBinding) : RecyclerView.ViewHolder(harcamaTipiCardTasarim.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HarcamaTipiCardTasarım {
         context = parent.context
-        gelirStr = context.getString(R.string.gelir)
-        if (raporMu){
-            setYuzde()
-        }
+
+
         val layoutInflater = LayoutInflater.from(context)
         gelirGiderTakipDatabase = GelirGiderTakipDatabase.getirGelirGiderTakipDatabase(context)!!
         val harcamaTipiCardTasarim = KategoriCardTasarimBinding.inflate(layoutInflater,parent,false)
@@ -38,13 +35,7 @@ class KategorilerRW (private var harcamaTipleriList : ArrayList<HarcamaTipi>, va
 
     }
 
-    private fun setYuzde() {
-        harcamaTipleriList.forEach {
-            if (it.kategoriToplamHarcamaMiktar != null){
-                toplamHarcamaMiktar += it.kategoriToplamHarcamaMiktar!!
-            }
-        }
-    }
+
 
 
 
@@ -55,13 +46,9 @@ class KategorilerRW (private var harcamaTipleriList : ArrayList<HarcamaTipi>, va
             // LOAD UI
             it.textViewKategoriAdi.text = harcamaTipi.ad
             if (raporMu){
-                it.progressBarRaporYuzde.visibility = View.VISIBLE
-                it.textViewRaporYuzde.visibility = View.VISIBLE
                 it.imageViewLockOrDelete.visibility  = View.INVISIBLE
             }
             else{
-                it.progressBarRaporYuzde.visibility = View.INVISIBLE
-                it.textViewRaporYuzde.visibility = View.INVISIBLE
                 it.imageViewLockOrDelete.visibility  = View.VISIBLE
             }
             if (harcamaTipi.has_drawable){
@@ -113,7 +100,6 @@ class KategorilerRW (private var harcamaTipleriList : ArrayList<HarcamaTipi>, va
 
         }
 
-        if (!raporMu){
             holder.harcamaTipiCardTasarim.let {
                 if (harcamaTipi.is_custom){
                     it.textViewKategoriAdi.setOnClickListener {
@@ -140,14 +126,8 @@ class KategorilerRW (private var harcamaTipleriList : ArrayList<HarcamaTipi>, va
                     }
                 }
             }
-        }
-        else{
-            val harcamaYuzde = harcamaTipi.kategoriToplamHarcamaMiktar?.div((toplamHarcamaMiktar / 100 ))
-            val yuvarlananSayi = String.format("%.2f", harcamaYuzde)
-            holder.harcamaTipiCardTasarim.progressBarRaporYuzde.max = toplamHarcamaMiktar.toInt()
-            holder.harcamaTipiCardTasarim.progressBarRaporYuzde.progress = harcamaTipi.kategoriToplamHarcamaMiktar!!.toInt()
-            holder.harcamaTipiCardTasarim.textViewRaporYuzde.text  = context.getString(R.string.harcama_yuzde,yuvarlananSayi)
-        }
+
+
 
 
 

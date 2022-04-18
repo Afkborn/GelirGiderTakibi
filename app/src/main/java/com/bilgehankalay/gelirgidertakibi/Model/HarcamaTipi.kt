@@ -30,4 +30,10 @@ data class HarcamaTipi(
 ) : Serializable {
     @Ignore
     var kategoriToplamHarcamaMiktar : Double? = null
+
+    @Ignore
+    var chartColor : Int? = null
+
+    @Ignore
+    var yuzde : Double? = null
 }

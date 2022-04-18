@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Gelir Gider Takibi</string>
-
     <string name="harcama_ozet">Harcama Özet</string>
     <string name="harcama_ekle">Harcama Ekle</string>
     <string name="ozet">Özet</string>
@@ -89,6 +88,10 @@
     <string name="yuzde_otuzBes">%35</string>
     <string name="gelirGider">Gelir/Gider</string>
     <string name="bahsis_aciklama">%1$s kişi yemek harcaması.</string>
+
+    <string name="usd_price">$%1$s</string>
+    <string name="lang">en</string>
+    <string name="country">US</string>
 
     <string-array name="tekrar_secenekler">
         <item>Her Gün</item>

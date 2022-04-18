@@ -1,7 +1,7 @@
 package com.bilgehankalay.gelirgidertakibi.fragment
 
+import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,10 +12,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bilgehankalay.gelirgidertakibi.Database.GelirGiderTakipDatabase
 import com.bilgehankalay.gelirgidertakibi.Model.GelirGider
 import com.bilgehankalay.gelirgidertakibi.Model.HarcamaTipi
-import com.bilgehankalay.gelirgidertakibi.adapter.GelirGiderRW
-import com.bilgehankalay.gelirgidertakibi.adapter.KategorilerRW
+import com.bilgehankalay.gelirgidertakibi.adapter.LegendRW
 import com.bilgehankalay.gelirgidertakibi.databinding.FragmentRaporBinding
-import com.google.android.material.tabs.TabLayout
+import com.github.mikephil.charting.animation.Easing
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.formatter.PercentFormatter
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -30,13 +34,9 @@ class Rapor : Fragment() {
     private var seciliTarih : String? = null
 
 
-    private lateinit var gelirGiderRaporRWAdapter : GelirGiderRW
-    private lateinit var kategorilerRaporRWAdapter : KategorilerRW
-
-
     private var harcamalar : ArrayList<GelirGider> = arrayListOf()
     private var kategoriler : ArrayList<HarcamaTipi> = arrayListOf()
-
+    var startOfMonth = 0L
     var toplamGelirMiktar = 0.0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,9 +59,8 @@ class Rapor : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setSpinnerListener()
         spinnerYukle()
-        binding.recyclerViewGelirGiderRapor.visibility = View.INVISIBLE
-        binding.recyclerViewKategoriRapor.visibility = View.VISIBLE
-        loadTabLayoutListener()
+        setChart()
+
 
     }
 
@@ -122,7 +121,7 @@ class Rapor : Fragment() {
         cal.clear(Calendar.MILLISECOND)
         cal[Calendar.DAY_OF_MONTH] = 1
 
-        val startOfMonth = cal.timeInMillis
+        startOfMonth = cal.timeInMillis
         cal.add(Calendar.MONTH, 1)
         val finishOfMonth = cal.timeInMillis
         return Pair(startOfMonth,finishOfMonth)
@@ -154,6 +153,7 @@ class Rapor : Fragment() {
                                 kategoriler[kategorilerId].kategoriToplamHarcamaMiktar = kategoriler[kategorilerId].kategoriToplamHarcamaMiktar?.plus(
                                     it.miktar
                                 )
+
                             }
 
                         }
@@ -163,57 +163,99 @@ class Rapor : Fragment() {
 
             }
         }
-
-        loadRecyclerViewGelirGider()
-        loadRecyclerViewKategoriler()
+        loadChart()
 
     }
 
-    private fun loadRecyclerViewGelirGider(){
-        gelirGiderRaporRWAdapter = GelirGiderRW(harcamalar)
-        gelirGiderRaporRWAdapter.yuzdeHesapla()
-        binding.recyclerViewGelirGiderRapor.layoutManager = LinearLayoutManager(requireContext(),
-            LinearLayoutManager.VERTICAL,false)
-        binding.recyclerViewGelirGiderRapor.adapter = gelirGiderRaporRWAdapter
-        binding.recyclerViewGelirGiderRapor.setHasFixedSize(true)
+    private fun setChart(){
+        binding.let {
+
+            //hollow pie chart
+            it.pieChart.isDrawHoleEnabled = false
+            it.pieChart.setTouchEnabled(false)
+
+            it.pieChart.setDrawEntryLabels(false)
+
+            //adding padding
+            it.pieChart.setUsePercentValues(true)
+            it.pieChart.isRotationEnabled = false
+
+            it.pieChart.legend.isEnabled = false
+            /*
+            it.pieChart.legend.orientation = Legend.LegendOrientation.HORIZONTAL
+            it.pieChart.legend.isWordWrapEnabled = false
+
+             */
+        }
+
     }
+    private fun loadChart(){
 
-    private fun loadRecyclerViewKategoriler(){
-        kategorilerRaporRWAdapter = KategorilerRW(kategoriler,true)
-        binding.recyclerViewKategoriRapor.layoutManager = LinearLayoutManager(requireContext(),
-        LinearLayoutManager.VERTICAL,false)
-        binding.recyclerViewKategoriRapor.adapter = kategorilerRaporRWAdapter
-        binding.recyclerViewKategoriRapor.setHasFixedSize(true)
+        var toplamHarcama = 0.0
 
-    }
+        val dataEntries = ArrayList<PieEntry>()
+        val colors: ArrayList<Int> = ArrayList()
+        if (kategoriler.size == 0){
+            dataEntries.add(PieEntry(100.0f,""))
+            val rnd = Random()
+            val color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256))
+            colors.add(color)
+        }
 
-    private fun loadTabLayoutListener(){
-        binding.raporTabLayout.addOnTabSelectedListener( object : TabLayout.OnTabSelectedListener{
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                if (tab != null){
-                    if (tab.position == 0){
-                        // Kategori
-                        binding.recyclerViewGelirGiderRapor.visibility = View.INVISIBLE
-                        binding.recyclerViewKategoriRapor.visibility = View.VISIBLE
-                    }
-                    if (tab.position == 1){
-                        // Gelir Gider
-                        binding.recyclerViewGelirGiderRapor.visibility = View.VISIBLE
-                        binding.recyclerViewKategoriRapor.visibility = View.INVISIBLE
-                    }
-                }
-
+        kategoriler.forEach {
+            if (it.kategoriToplamHarcamaMiktar!= null){
+                toplamHarcama += it.kategoriToplamHarcamaMiktar!!
+                dataEntries.add(PieEntry(it.kategoriToplamHarcamaMiktar!!.toFloat(),it.ad))
             }
+            val rnd = Random()
+            val color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256))
+            colors.add(color)
+            it.chartColor = color
+        }
+        kategoriler.forEach {
+            it.yuzde = it.kategoriToplamHarcamaMiktar!! / (toplamHarcama / 100)
+        }
 
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-            }
 
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-            }
+        binding.let {
+            val month_date = SimpleDateFormat("MMMM YYYY")
+            val month_name = month_date.format(startOfMonth)
 
-        })
+            it.pieChart.description.text = ""
+            binding.pieChart.centerText = month_name
+            binding.pieChart.setCenterTextSize(20.0f)
+            it.pieChart.description.textSize = 0.0f
+        }
+
+
+        val dataSet = PieDataSet(dataEntries, "")
+        val data = PieData(dataSet)
+
+        // In Percentage
+        data.setValueFormatter(PercentFormatter())
+        dataSet.sliceSpace = 5f
+        dataSet.colors = colors
+
+        binding.pieChart.data = data
+        data.setValueTextSize(20f)
+        binding.pieChart.setExtraOffsets(0f, 0f, 0f, 0f)
+        binding.pieChart.animateY(1000, Easing.EaseInOutQuad)
+
+        binding.pieChart.holeRadius = 60f
+        binding.pieChart.transparentCircleRadius = 61f
+        binding.pieChart.isDrawHoleEnabled = true
+        binding.pieChart.setHoleColor(Color.WHITE)
+        setRecyclerViewAdapter()
     }
 
+    private fun setRecyclerViewAdapter() {
+        binding.let {
+            val legendAdapter = LegendRW(kategoriler)
+            it.recyclerViewLegendHorizontal.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
+            it.recyclerViewLegendHorizontal.adapter = legendAdapter
+            it.recyclerViewLegendHorizontal.setHasFixedSize(true)
+        }
+    }
 
 
 
