@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/harcamaEkle"
-        android:name="com.bilgehankalay.gelirgidertakibi.fragment.HarcamaEkle"
+        android:name="com.yasaryasar.gelirgidertakibi.fragment.HarcamaEkle"
         android:label="harcamaEkle_to_Ozet"
         tools:layout="@layout/fragment_harcama_ekle">
         <action
@@ -28,7 +28,7 @@
     </fragment>
     <fragment
         android:id="@+id/ozet"
-        android:name="com.bilgehankalay.gelirgidertakibi.fragment.Ozet"
+        android:name="com.yasaryasar.gelirgidertakibi.fragment.Ozet"
         android:label="fragment_ozet"
         tools:layout="@layout/fragment_ozet" >
         <action
@@ -38,7 +38,7 @@
     </fragment>
     <fragment
         android:id="@+id/gelirEkle"
-        android:name="com.bilgehankalay.gelirgidertakibi.fragment.GelirEkle"
+        android:name="com.yasaryasar.gelirgidertakibi.fragment.GelirEkle"
         android:label="gelirEkle_to_Ozet"
         tools:layout="@layout/fragment_gelir_ekle">
         <action
@@ -47,24 +47,24 @@
     </fragment>
     <fragment
         android:id="@+id/rapor"
-        android:name="com.bilgehankalay.gelirgidertakibi.fragment.Rapor"
+        android:name="com.yasaryasar.gelirgidertakibi.fragment.Rapor"
         android:label="fragment_rapor"
         tools:layout="@layout/fragment_rapor" />
     <fragment
         android:id="@+id/gelirGiderDetay"
-        android:name="com.bilgehankalay.gelirgidertakibi.fragment.GelirGiderDetay"
+        android:name="com.yasaryasar.gelirgidertakibi.fragment.GelirGiderDetay"
         android:label="fragment_gelir_gider_detay"
         tools:layout="@layout/fragment_gelir_gider_detay" >
         <argument
             android:name="gelenGelirGider"
-            app:argType="com.bilgehankalay.gelirgidertakibi.Model.GelirGider" />
+            app:argType="com.yasaryasar.gelirgidertakibi.Model.GelirGider" />
         <action
             android:id="@+id/gelirGiderDetay_to_ozet"
             app:destination="@id/ozet" />
     </fragment>
     <fragment
         android:id="@+id/kategoriEkle"
-        android:name="com.bilgehankalay.gelirgidertakibi.fragment.KategoriEkle"
+        android:name="com.yasaryasar.gelirgidertakibi.fragment.KategoriEkle"
         android:label="fragment_kategori_ekle"
         tools:layout="@layout/fragment_kategori_ekle" >
         <action
@@ -79,7 +79,7 @@
     </fragment>
     <fragment
         android:id="@+id/menu"
-        android:name="com.bilgehankalay.gelirgidertakibi.fragment.Menu"
+        android:name="com.yasaryasar.gelirgidertakibi.fragment.Menu"
         android:label="fragment_menu"
         tools:layout="@layout/fragment_menu" >
         <action
@@ -91,7 +91,7 @@
     </fragment>
     <fragment
         android:id="@+id/kategoriler"
-        android:name="com.bilgehankalay.gelirgidertakibi.fragment.Kategoriler"
+        android:name="com.yasaryasar.gelirgidertakibi.fragment.Kategoriler"
         android:label="fragment_kategoriler"
         tools:layout="@layout/fragment_kategoriler" >
         <action
@@ -102,7 +102,7 @@
     </fragment>
     <fragment
         android:id="@+id/bahsis"
-        android:name="com.bilgehankalay.gelirgidertakibi.fragment.Bahsis"
+        android:name="com.yasaryasar.gelirgidertakibi.fragment.Bahsis"
         android:label="fragment_bahsis"
         tools:layout="@layout/fragment_bahsis" >
         <action

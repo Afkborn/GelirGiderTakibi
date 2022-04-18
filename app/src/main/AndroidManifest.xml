@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.bilgehankalay.gelirgidertakibi">
+    package="com.yasaryasar.gelirgidertakibi">
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
@@ -13,7 +13,7 @@
         android:theme="@style/Theme.GelirGiderTakibi"
         android:requestLegacyExternalStorage="true">
         <activity
-            android:name=".activity.MainActivity"
+            android:name="com.yasaryasar.gelirgidertakibi.activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
